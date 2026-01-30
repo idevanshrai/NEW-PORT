@@ -3,9 +3,14 @@ import { SplashScreen } from './components/SplashScreen';
 import { Hero } from './components/Hero';
 import { ProjectCard } from './components/ProjectCard';
 import { LabCarousel } from './components/LabCarousel';
+import { ExperienceTimeline } from './components/ExperienceTimeline';
 import { AboutStats } from './components/AboutStats';
 import { Reveal } from './components/Reveal';
+import { Cursor } from './components/Cursor';
+import { Footer } from './components/Footer';
 import clsx from 'clsx';
+
+import { PROJECTS } from './data';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -18,6 +23,7 @@ function App() {
 
   return (
     <>
+      <Cursor />
       <SplashScreen onComplete={handleSplashComplete} isVisible={showSplash} />
 
       <div
@@ -36,6 +42,12 @@ function App() {
         <div className="relative z-10 flex min-h-screen w-full flex-col">
           <Hero />
 
+          <Reveal width="100%" direction="up">
+            <AboutStats />
+          </Reveal>
+
+          <ExperienceTimeline />
+
           {/* Selected Works Section */}
           <section className="px-4 py-20 md:px-20 relative" id="work">
             <div className="max-w-[1400px] mx-auto">
@@ -53,37 +65,18 @@ function App() {
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <Reveal delay={0.1}>
-                  <ProjectCard
-                    title="Fluid Commerce"
-                    description="E-commerce experience with liquid transitions."
-                    year="2023"
-                    image="https://lh3.googleusercontent.com/aida-public/AB6AXuCQzJJgQeSlAi8mIZzK4a-43t98eOkRQAWYLBmsyP4WXzh1koxHBFdyv_EgAuBr7xkNYWy_s09Gg1EuFt4UH-wzx4RnK9bZU2NXLEC2lnEX8IMy9WY4pCcYJHLPknz8tpfcvL6cF2DWklHo6geCRoK2k4fj4CR6llBb_2JLal9rAsdVHmObA51V75VzmzxbQA3ubA-EBOqYU6iOoMXNhwsM8QwIwwYDXASSe__5jSPlt0GS-O37KV1S-NRwNJEo5TzK0VToYd1qmlI"
-                    icon="water_drop"
-                    accentColor="violet"
-                  />
-                </Reveal>
-                <Reveal delay={0.2}>
-                  <ProjectCard
-                    className="md:mt-20"
-                    title="Neon Dashboard"
-                    description="Data visualization with glowing aesthetics."
-                    year="2024"
-                    image="https://lh3.googleusercontent.com/aida-public/AB6AXuBGQtqgALG6XX3mFc_0XjLaVA1ojcOPQ5Is54CwYC1UwCJYUA0mKbly1ODHsewy5rz4Aw0Ed9iSXJCOtex-e9nJkCIYGJB7Pwji1dnL-AT5xy5GnmtFuIIyEbHcqvkFJzj0Krd0UEnVkJj5S7wKew7OfDmlCGHtfrKVpPHLhwX_UMAGshndJcZmYCJd5fqcAyedjDZPSzeAKNO0rcYsVmUFB-TU44UuQjTTTfFjpCfBS5pDMlGox7PpTxeurnrp60EeKMK8n7yAZlU"
-                    icon="bolt"
-                    accentColor="primary"
-                  />
-                </Reveal>
-                <Reveal delay={0.3}>
-                  <ProjectCard
-                    title="Retro Portfolio"
-                    description="Y2K inspired personal site."
-                    year="2022"
-                    image="https://lh3.googleusercontent.com/aida-public/AB6AXuAbS2ndnfQoCe_WL4PURy8uuqjj1wWLX_WeYajjWiJZLsIg-dYJCkEpn2UCSKDEyfj9RjSD1xRhvywpBtSVwpjxrk4h9F0SNETShLh8jCPLQGES9vhr3srMwgcruXoOo5xR6vYbw4o-Vn5A17z4krHEYCq1ipCHQpuar9xJbEofq7QQ8SUNTvvpb5vqTm0aNKL4Y3ypZDbcThy5NtOLDWcN7dN_owixQTfBsiarQdvB81_QF9MEgp2pZTR-Fvr7-HiDGwW40gmLPkQ"
-                    icon="stars"
-                    accentColor="pink"
-                  />
-                </Reveal>
+                {PROJECTS.map((project, index) => (
+                  <Reveal key={`${project.title}-${index}`} delay={0.1 + (index % 3) * 0.1} width="100%">
+                    <ProjectCard
+                      title={project.title}
+                      description={project.description}
+                      year={project.year}
+                      image={project.image}
+                      icon={project.icon}
+                      accentColor={project.accentColor}
+                    />
+                  </Reveal>
+                ))}
               </div>
             </div>
           </section>
@@ -92,9 +85,7 @@ function App() {
             <LabCarousel />
           </Reveal>
 
-          <Reveal width="100%" direction="up">
-            <AboutStats />
-          </Reveal>
+          <Footer />
         </div>
       </div>
     </>

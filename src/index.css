@@ -56,8 +56,16 @@
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 .fluid-mesh {
@@ -65,4 +73,42 @@
     radial-gradient(circle at 20% 30%, rgba(163, 0, 255, 0.15), transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(170, 255, 0, 0.15), transparent 50%),
     radial-gradient(circle at 50% 80%, rgba(255, 51, 204, 0.1), transparent 50%);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  border: 2px solid #242428;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Firefox Scrollbar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* Hide default cursor to use custom one */
+@media (min-width: 768px) {
+
+  body,
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    cursor: none;
+  }
 }
