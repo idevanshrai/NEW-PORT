@@ -31,6 +31,7 @@ export default {
                 "pulse-slow": "pulse 4s cubic-bezier(0.4,0,0.6,1) infinite",
                 "rainbow-shift": "rainbow-shift 3s linear infinite",
                 "shine": "shine 5s linear infinite",
+                "blink": "blink 1s step-end infinite",
             },
             keyframes: {
                 float: {
@@ -43,6 +44,10 @@ export default {
                 },
                 shine: {
                     "to": { "background-position": "200% center" }
+                },
+                blink: {
+                    "0%, 100%": { opacity: "1" },
+                    "50%": { opacity: "0" }
                 }
             },
         },

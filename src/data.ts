@@ -12,7 +12,7 @@ export const PROFILE = {
     role: "Software Developer",
     initials: "DR",
     location: "India", // inferred, adding commonly used field
-    email: "email@example.com", // Placeholder
+    email: "idevanshrai@gmail.com", // Placeholder
     hero: {
         title1: "DEVANSH",
         title2: "RAI",
@@ -109,14 +109,14 @@ export const EXPERIENCE = {
             color: "text-primary"
         },
         {
-            title: "Indian School Certificate",
+            title: "Indian School Certificate(ISC)",
             organization: "City Montessori Inter College",
             period: "2021 - 2023",
             description: "From 2021 to 2023, I had the privilege of being deeply involved in various leadership and organizational roles at City Montessori School, Lucknow, India. Positions Held: Student Government, Robotics Club.",
             color: "text-primary"
         },
         {
-            title: "Indian Certificate of Secondary Education",
+            title: "Indian Certificate of Secondary Education(ICSE)",
             organization: "City Montessori Inter College",
             period: "2019 - 2021",
             description: "During the 2019-2020 academic period at City Montessori School, Lucknow, India, I engaged in a diverse range of activities that contributed significantly to my personal and academic growth.",
@@ -128,7 +128,7 @@ export const EXPERIENCE = {
             title: "Software Development Intern",
             organization: "Center for eGovernance",
             period: "May 2025 - June 2024",
-            description: "As part of my internship, I am undertaking a project focused on enhancing corporate security through the use of cutting-edge technology. My primary responsibilities include: Developing cross-platform applications for iOS and Android using Flutter with Dart, featuring advanced biometric authentication.",
+            description: "As part of my internship at the Centre for e-Governance (CeG), I worked on the AI Pragya project, developing and improving digital tools for AI outreach, training, and feedback within government systems.",
             color: "text-primary"
         },
         {

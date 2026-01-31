@@ -7,10 +7,13 @@ import { ExperienceTimeline } from './components/ExperienceTimeline';
 import { AboutStats } from './components/AboutStats';
 import { Reveal } from './components/Reveal';
 import { Cursor } from './components/Cursor';
+import { GitHubActivity } from './components/GitHubActivity';
 import { Footer } from './components/Footer';
 import clsx from 'clsx';
 
 import { PROJECTS } from './data';
+
+import { SmoothScroll } from './components/SmoothScroll';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -23,6 +26,7 @@ function App() {
 
   return (
     <>
+      <SmoothScroll />
       <Cursor />
       <SplashScreen onComplete={handleSplashComplete} isVisible={showSplash} />
 
@@ -35,7 +39,6 @@ function App() {
         {/* Fluid Background Mesh */}
         <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
           <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-accent-violet/20 rounded-full blur-[100px] animate-float mix-blend-screen"></div>
-          <div className="absolute top-[20%] right-[-10%] w-[40vw] h-[40vw] bg-primary/20 rounded-full blur-[80px] animate-float-delayed mix-blend-screen"></div>
           <div className="absolute bottom-[-10%] left-[20%] w-[60vw] h-[60vw] bg-accent-pink/10 rounded-full blur-[120px] animate-float mix-blend-overlay"></div>
         </div>
 
@@ -83,6 +86,10 @@ function App() {
 
           <Reveal width="100%" direction="right">
             <LabCarousel />
+          </Reveal>
+
+          <Reveal width="100%" direction="up">
+            <GitHubActivity />
           </Reveal>
 
           <Footer />

@@ -3,11 +3,12 @@ import { Reveal } from './Reveal';
 import { PROFILE } from '../data';
 import { FaGithub, FaLinkedin, FaTwitter, FaInstagram } from 'react-icons/fa';
 
+
 export const Hero = () => {
     const [text, setText] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
     const [loopNum, setLoopNum] = useState(0);
-    const [typingSpeed, setTypingSpeed] = useState(150);
+    const [typingSpeed, setTypingSpeed] = useState(70);
 
     useEffect(() => {
         const handleTyping = () => {
@@ -19,7 +20,7 @@ export const Hero = () => {
                 : fullText.substring(0, text.length + 1)
             );
 
-            setTypingSpeed(isDeleting ? 30 : 150);
+            setTypingSpeed(isDeleting ? 30 : 70);
 
             if (!isDeleting && text === fullText) {
                 setTimeout(() => setIsDeleting(true), 3000); // Pause at end
@@ -34,15 +35,19 @@ export const Hero = () => {
     }, [text, isDeleting, loopNum, typingSpeed]);
 
     return (
-        <div className="relative min-h-screen flex flex-col items-center justify-center p-6 @container">
+        <div className="relative min-h-screen flex items-center justify-center p-6 @container overflow-hidden pt-20 md:pt-0">
+            {/* Green Blob - Bottom Right (Enhanced Visibility) */}
+            <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-primary/40 rounded-full blur-[120px] pointer-events-none z-0 opacity-50 mix-blend-screen"></div>
+
             {/* Scattered Nav Items */}
             <nav className="absolute inset-0 pointer-events-none z-20 hidden md:block">
                 {PROFILE.nav.map((item, index) => {
+                    // Update positions to avoid the 3D area on the right
                     const positions = [
-                        "top-12 left-12",
-                        "top-24 right-16",
-                        "bottom-32 left-20",
-                        "bottom-24 right-32", // Added position for potential extra items
+                        "top-12 left-12",       // Top Left
+                        "bottom-12 left-12",    // Bottom Left
+                        "top-12 right-12",      // Top Right
+                        "bottom-12 right-12",   // Bottom Right
                     ];
                     // safe index
                     const posIndex = index % positions.length;
@@ -75,37 +80,34 @@ export const Hero = () => {
                 </button>
             </nav>
 
-            {/* Main Hero Content */}
-            <div className="flex flex-col items-center justify-center text-center gap-4 z-10 mix-blend-normal mt-[-10vh]">
+            {/* Main Content */}
+            <div className="max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center gap-8 relative z-10">
+
                 <Reveal direction="down">
-                    <h1 className="text-[15vw] md:text-[12vw] leading-[0.85] font-black tracking-tighter text-white mix-blend-lighten hover:skew-x-6 transition-transform duration-500 cursor-default select-none">
+                    <h1 className="text-[12vw] leading-[0.85] font-black tracking-tighter text-white mix-blend-lighten hover:skew-x-6 transition-transform duration-500 cursor-default select-none">
                         {PROFILE.hero.title1}<br />
-                        <span className="hidden md:inline text-white/20 blur-[1px]">{PROFILE.hero.title2}</span>
-                        <span className="md:hidden">{PROFILE.hero.title2}</span>
+                        <span className="text-white/20 blur-[1px]">{PROFILE.hero.title2}</span>
                     </h1>
                 </Reveal>
-                <Reveal delay={0.4}>
-                    <div className="mt-6 relative group cursor-pointer w-fit mx-auto px-6">
-                        {/* Glow effect */}
-                        <div className="absolute inset-0 bg-white/5 blur-xl group-hover:opacity-75 transition-opacity duration-500 rounded-lg"></div>
 
-                        {/* Content Box */}
-                        <div className="relative px-8 py-3 border border-white/20 rounded-lg bg-white/5 backdrop-blur-xl w-full flex items-center justify-center min-h-[60px] shadow-2xl">
-                            <h2 className="text-lg md:text-2xl font-bold text-white capitalize tracking-widest font-mono whitespace-nowrap">
-                                {text}<span className="animate-blink text-primary">|</span>
+                <Reveal delay={0.2}>
+                    <div className="mt-8 relative group cursor-pointer">
+                        <div className="relative px-6 py-2 border border-white/10 rounded-full bg-white/5 backdrop-blur-md hover:bg-white/10 transition-colors duration-300">
+                            <h2 className="text-lg md:text-2xl font-medium subpixel-antialiased text-white uppercase tracking-widest whitespace-nowrap min-h-[1.5em] flex items-center justify-center">
+                                {text}<span className="ml-2 animate-blink inline-block w-2 h-6 bg-primary shadow-[0_0_10px_#aaff00] align-middle opacity-100"></span>
                             </h2>
                         </div>
                     </div>
                 </Reveal>
 
-                <Reveal delay={0.6}>
-                    <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto mt-8 font-light leading-relaxed">
+                <Reveal delay={0.4}>
+                    <p className="text-white/60 text-lg md:text-xl max-w-xl font-light leading-relaxed">
                         {PROFILE.hero.description}
                     </p>
                 </Reveal>
 
-                <Reveal delay={0.8}>
-                    <div className="flex gap-6 mt-8">
+                <Reveal delay={0.6}>
+                    <div className="flex gap-6 mt-4">
                         {PROFILE.socials.map((social) => (
                             <a
                                 key={social.label}
@@ -119,10 +121,10 @@ export const Hero = () => {
                                     ${social.label === 'LinkedIn' ? 'hover:text-[#0077B5]' : ''}
                                 `}
                             >
-                                {social.label === 'Instagram' && <FaInstagram size={28} />}
-                                {social.label === 'Twitter' && <FaTwitter size={28} />}
-                                {social.label === 'GitHub' && <FaGithub size={28} />}
-                                {social.label === 'LinkedIn' && <FaLinkedin size={28} />}
+                                {social.label === 'Instagram' && <FaInstagram size={32} />}
+                                {social.label === 'Twitter' && <FaTwitter size={32} />}
+                                {social.label === 'GitHub' && <FaGithub size={32} />}
+                                {social.label === 'LinkedIn' && <FaLinkedin size={32} />}
                             </a>
                         ))}
                     </div>

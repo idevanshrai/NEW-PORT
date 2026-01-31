@@ -152,10 +152,7 @@ export const ExperienceTimeline = () => {
     });
 
     return (
-        <section className="py-20 px-4 md:px-20 relative" id="experience" ref={containerRef}>
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[100px]" />
-            </div>
+        <section className="py-20 px-4 md:px-20 relative bg-background-dark z-10" id="experience" ref={containerRef}>
 
             <div className="max-w-[1200px] mx-auto relative">
                 <motion.div
@@ -190,7 +187,7 @@ export const ExperienceTimeline = () => {
                         {/* Education Section */}
                         <div className="relative">
                             <div className="flex md:justify-center mb-8 pl-12 md:pl-0">
-                                <span className="bg-white/5 border border-white/10 px-6 py-2 rounded-full text-sm font-bold text-primary uppercase tracking-widest z-10 shadow-xl">
+                                <span className="bg-zinc-900/90 backdrop-blur-md border border-white/20 px-8 py-3 rounded-full text-xl font-bold text-primary uppercase tracking-widest z-10 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
                                     Education
                                 </span>
                             </div>
@@ -204,7 +201,7 @@ export const ExperienceTimeline = () => {
                         {/* Professional Section */}
                         <div className="relative">
                             <div className="flex md:justify-center mb-8 pl-12 md:pl-0 pt-8 border-t border-white/5 md:border-none">
-                                <span className="bg-white/5 border border-white/10 px-6 py-2 rounded-full text-sm font-bold text-primary uppercase tracking-widest z-10 shadow-xl">
+                                <span className="bg-zinc-900/90 backdrop-blur-md border border-white/20 px-8 py-3 rounded-full text-xl font-bold text-primary uppercase tracking-widest z-10 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
                                     Professional
                                 </span>
                             </div>

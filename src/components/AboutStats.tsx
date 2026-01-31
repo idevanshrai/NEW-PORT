@@ -5,7 +5,6 @@ export const AboutStats = () => {
         <section className="px-4 py-8 md:py-20 md:px-20 max-w-[1200px] mx-auto w-full" id="about">
             <div className="glass-panel rounded-[2rem] md:rounded-[3rem] relative overflow-hidden">
                 {/* Background Blobs */}
-                <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/20 rounded-full blur-[60px] pointer-events-none"></div>
                 <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-accent-pink/20 rounded-full blur-[60px] pointer-events-none"></div>
 
                 <div className="relative z-10 flex flex-col">
