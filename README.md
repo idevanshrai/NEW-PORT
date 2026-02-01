@@ -1,73 +1,71 @@
-# React + TypeScript + Vite
+# 💻 Personal Portfolio Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to my portfolio! This project is a digital representation of who I am as a Computer Science student and developer — showcasing my work, interests, and what I love building.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## React Compiler
+- **Responsive Design**  
+  Fully optimized for all devices — from desktops to smartphones.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Project Showcase**  
+  A clean, visual portfolio with descriptions and live links to my best work.
 
-## Expanding the ESLint configuration
+- **About Me**  
+  A glimpse into my background, skills, and creative passions — from code to cameras.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Contact Form**  
+  A simple way for visitors to reach out and connect.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Interactive Experience**  
+  Engaging animations and subtle interactivity throughout the site.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🛠️ Getting Started
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1. **Clone the Repo**  
+   ```bash
+   git clone https://github.com/idevanshrai/NEW-PORT.git
+   ```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+2. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+3. **Run Locally**
+   ```bash
+   npm run dev
+   ```
+
+4. **Customize Your Content**  
+   Replace text, images, and styles to make it your own.
+
+5. **Deploy**  
+   You can deploy it on any static hosting platform like **GitHub Pages**, **Netlify**, or **Vercel**.
+
+---
+
+## 🌱 Roadmap / Future Improvements
+
+- **📝 Blog Section** – Sharing insights, tutorials, and thoughts.
+- **🛠️ Skills Deep Dive** – With tools, technologies, and hands-on examples.
+- **💬 Testimonials** – Feedback from collaborators and clients.
+
+---
+
+
+## 📄 License
+
+MIT License — feel free to use and modify.
+
+---
+
+## 🙋‍♂️ Author
+
+**Devansh Rai**  
+Software Developer | Open Source Enthusiast | Tech + Design Hybrid  
+📧 [idevanshrai@gmail.com](mailto:idevanshrai@gmail.com)  
+🌐 [idevanshrai.vercel.app](https://idevanshrai.vercel.app)
