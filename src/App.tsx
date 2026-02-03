@@ -10,6 +10,7 @@ import { Cursor } from './components/Cursor';
 import { GitHubActivity } from './components/GitHubActivity';
 import { Footer } from './components/Footer';
 import clsx from 'clsx';
+import { Analytics } from '@vercel/analytics/react';
 
 import { PROJECTS } from './data';
 
@@ -26,6 +27,7 @@ function App() {
 
   return (
     <>
+      <Analytics />
       <SmoothScroll />
       <Cursor />
       <SplashScreen onComplete={handleSplashComplete} isVisible={showSplash} />
@@ -48,6 +50,7 @@ function App() {
           <Reveal width="100%" direction="up">
             <AboutStats />
           </Reveal>
+
 
           <ExperienceTimeline />
 

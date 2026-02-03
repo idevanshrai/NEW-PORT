@@ -28,6 +28,20 @@ export const PROFILE = {
             { label: "Internship", value: "1", icon: "work", color: "text-accent-pink" },
         ]
     },
+    skills: [
+        { name: "React", slug: "react", color: "#61DAFB" },
+        { name: "TypeScript", slug: "typescript", color: "#3178C6" },
+        { name: "Tailwind", slug: "tailwindcss", color: "#06B6D4" },
+        { name: "Three.js", slug: "three.js", color: "#000000" },
+        { name: "Vite", slug: "vite", color: "#646CFF" },
+        { name: "Next.js", slug: "next.js", color: "#000000" },
+        { name: "Node.js", slug: "nodedotjs", color: "#339933" },
+        { name: "Python", slug: "python", color: "#3776AB" },
+        { name: "Flutter", slug: "flutter", color: "#02569B" },
+        { name: "Git", slug: "git", color: "#F05032" },
+        { name: "Figma", slug: "figma", color: "#F24E1E" },
+        { name: "MySQL", slug: "mysql", color: "#4479A1" },
+    ],
     socials: [
         { label: "GitHub", url: "https://github.com/idevanshrai" },
         { label: "LinkedIn", url: "https://www.linkedin.com/in/idevanshrai/" },
