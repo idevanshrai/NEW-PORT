@@ -1,6 +1,6 @@
 import type { Project } from '../data';
 
-export const ProjectCard = ({ title, description, year, image, icon, accentColor }: Project) => {
+export const ProjectCard = ({ title, description, year, image, icon, accentColor, repo }: Project) => {
     const colorMap = {
         violet: 'text-accent-violet border-accent-violet/20 group-hover:border-accent-violet/50',
         primary: 'text-primary border-primary/20 group-hover:border-primary/50',
@@ -39,10 +39,21 @@ export const ProjectCard = ({ title, description, year, image, icon, accentColor
             </div>
 
             {/* Hover Reveal Button */}
-            <div className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                <button className="bg-white text-background-dark w-12 h-12 rounded-full flex items-center justify-center font-bold hover:scale-110 transition-transform">
-                    <span className="material-symbols-outlined">arrow_outward</span>
-                </button>
+            <div className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 z-20">
+                {repo ? (
+                    <a
+                        href={repo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-white text-background-dark w-12 h-12 rounded-full flex items-center justify-center font-bold hover:scale-110 transition-transform"
+                    >
+                        <span className="material-symbols-outlined">arrow_outward</span>
+                    </a>
+                ) : (
+                    <button className="bg-white text-background-dark w-12 h-12 rounded-full flex items-center justify-center font-bold hover:scale-110 transition-transform">
+                        <span className="material-symbols-outlined">arrow_outward</span>
+                    </button>
+                )}
             </div>
         </div>
     );

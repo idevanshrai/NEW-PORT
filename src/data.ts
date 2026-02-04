@@ -5,6 +5,7 @@ export interface Project {
     image: string;
     icon: string;
     accentColor: "violet" | "primary" | "pink";
+    repo?: string;
 }
 
 export const PROFILE = {
@@ -57,26 +58,29 @@ export const PROJECTS: Project[] = [
     {
         title: "BrimBrowser",
         description: "A modern, lightweight browser for macOS.",
-        year: "2024",
+        year: "2025",
         image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCQzJJgQeSlAi8mIZzK4a-43t98eOkRQAWYLBmsyP4WXzh1koxHBFdyv_EgAuBr7xkNYWy_s09Gg1EuFt4UH-wzx4RnK9bZU2NXLEC2lnEX8IMy9WY4pCcYJHLPknz8tpfcvL6cF2DWklHo6geCRoK2k4fj4CR6llBb_2JLal9rAsdVHmObA51V75VzmzxbQA3ubA-EBOqYU6iOoMXNhwsM8QwIwwYDXASSe__5jSPlt0GS-O37KV1S-NRwNJEo5TzK0VToYd1qmlI",
         icon: "desktop_mac",
-        accentColor: "violet"
+        accentColor: "violet",
+        repo: "https://github.com/idevanshrai/BrimBrowser-MacOS"
     },
     {
         title: "mcp playground",
         description: "Leave Management MCP Server for Claude Desktop.",
-        year: "2024",
+        year: "2026",
         image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBGQtqgALG6XX3mFc_0XjLaVA1ojcOPQ5Is54CwYC1UwCJYUA0mKbly1ODHsewy5rz4Aw0Ed9iSXJCOtex-e9nJkCIYGJB7Pwji1dnL-AT5xy5GnmtFuIIyEbHcqvkFJzj0Krd0UEnVkJj5S7wKew7OfDmlCGHtfrKVpPHLhwX_UMAGshndJcZmYCJd5fqcAyedjDZPSzeAKNO0rcYsVmUFB-TU44UuQjTTTfFjpCfBS5pDMlGox7PpTxeurnrp60EeKMK8n7yAZlU",
         icon: "terminal",
-        accentColor: "primary"
+        accentColor: "primary",
+        repo: "https://github.com/idevanshrai/mcp-playground"
     },
     {
-        title: "TaskSlate",
-        description: "Notion-inspired collaborative workspace.",
-        year: "2023",
+        title: "EchoScribe",
+        description: "Private, offline audio transcription and summarization.",
+        year: "2025",
         image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAbS2ndnfQoCe_WL4PURy8uuqjj1wWLX_WeYajjWiJZLsIg-dYJCkEpn2UCSKDEyfj9RjSD1xRhvywpBtSVwpjxrk4h9F0SNETShLh8jCPLQGES9vhr3srMwgcruXoOo5xR6vYbw4o-Vn5A17z4krHEYCq1ipCHQpuar9xJbEofq7QQ8SUNTvvpb5vqTm0aNKL4Y3ypZDbcThy5NtOLDWcN7dN_owixQTfBsiarQdvB81_QF9MEgp2pZTR-Fvr7-HiDGwW40gmLPkQ",
         icon: "dashboard",
-        accentColor: "pink"
+        accentColor: "pink",
+        repo: "https://github.com/idevanshrai/EchoScribe"
     }
 ];
 

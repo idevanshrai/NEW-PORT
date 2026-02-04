@@ -80,6 +80,7 @@ function App() {
                       image={project.image}
                       icon={project.icon}
                       accentColor={project.accentColor}
+                      repo={project.repo}
                     />
                   </Reveal>
                 ))}
