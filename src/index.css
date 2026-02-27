@@ -6,6 +6,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    font-size: 75%;
+  }
+}
+
 @layer components {
   .glass-morphism {
     @apply bg-white/5 backdrop-blur-[20px] border border-white/10;
