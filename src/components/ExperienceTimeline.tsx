@@ -59,25 +59,24 @@ const ExperienceCard = ({ item, index }: { item: any, index: number }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`relative pl-12 md:pl-0 ${index % 2 === 0 ? 'order-2' : 'order-1'}`}
+                className={`relative pl-10 md:pl-0 ${index % 2 === 0 ? 'order-2' : 'order-1'}`}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
             >
-                {/* Timeline Dot & Connector */}
                 {/* Desktop: Center Dot */}
-                <div className={`hidden md:flex absolute top-8 ${index % 2 === 0 ? '-left-[27px]' : '-right-[27px]'} w-3.5 h-3.5 rounded-full border border-white/20 bg-background-dark z-20 items-center justify-center group-hover:border-primary transition-colors duration-500`}>
+                <div className={`hidden md:flex absolute top-[32px] ${index % 2 === 0 ? '-left-[27px]' : '-right-[27px]'} w-3.5 h-3.5 rounded-full border border-white/20 bg-background-dark z-20 items-center justify-center group-hover:border-primary transition-colors duration-500`}>
                     <div className="w-1.5 h-1.5 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
 
                 {/* Desktop: Connector Line */}
-                <div className={`hidden md:block absolute top-[2.25rem] ${index % 2 === 0 ? 'left-[-20px] w-5' : 'right-[-20px] w-5'} h-px bg-white/10 group-hover:bg-primary/50 transition-colors duration-500`} />
+                <div className={`hidden md:block absolute top-[38px] ${index % 2 === 0 ? 'left-[-20px] w-5' : 'right-[-20px] w-5'} h-px bg-white/10 group-hover:bg-primary/50 transition-colors duration-500`} />
 
                 {/* Mobile: Left Dot */}
-                <div className="md:hidden absolute left-[6.5px] top-8 w-3 h-3 rounded-full border border-white/20 bg-background-dark z-20 flex items-center justify-center transform -translate-x-1/2">
-                    <div className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="md:hidden absolute left-[16px] top-[32px] w-4 h-4 rounded-full border border-white/20 bg-background-dark z-20 flex items-center justify-center transform -translate-x-1/2">
+                    <div className="w-1.5 h-1.5 bg-primary rounded-full opacity-50 group-hover:opacity-100 transition-opacity" />
                 </div>
                 {/* Mobile: Connector Line */}
-                <div className="md:hidden absolute left-[6.5px] top-[2.25rem] w-8 h-px bg-white/10" />
+                <div className="md:hidden absolute left-[16px] top-[39px] w-6 h-[2px] bg-white/10 group-hover:bg-primary/50 transition-colors duration-500" />
 
 
                 {/* Content Card with Tilt */}
@@ -177,17 +176,17 @@ export const ExperienceTimeline = () => {
                     />
 
                     {/* Left Line - Mobile */}
-                    <div className="md:hidden absolute left-[6px] top-0 bottom-0 w-px bg-white/10 z-0" />
+                    <div className="md:hidden absolute left-[15px] top-0 bottom-0 w-[2px] bg-white/10 z-0" />
                     <motion.div
                         style={{ scaleY, transformOrigin: 'top' }}
-                        className="md:hidden absolute left-[6px] top-0 bottom-0 w-px bg-gradient-to-b from-primary via-primary to-transparent z-0 shadow-[0_0_15px_rgba(170,255,0,0.6)]"
+                        className="md:hidden absolute left-[15px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-primary via-primary to-transparent z-0 shadow-[0_0_15px_rgba(170,255,0,0.6)]"
                     />
 
                     <div className="space-y-20">
                         {/* Education Section */}
                         <div className="relative">
-                            <div className="flex md:justify-center mb-8 pl-12 md:pl-0">
-                                <span className="bg-zinc-900/90 backdrop-blur-md border border-white/20 px-8 py-3 rounded-full text-xl font-bold text-primary uppercase tracking-widest z-10 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+                            <div className="flex justify-start md:justify-center mb-8 pl-10 md:pl-0 pt-2">
+                                <span className="bg-zinc-900/90 backdrop-blur-md border border-white/20 px-6 py-2 md:px-8 md:py-3 rounded-full text-lg md:text-xl font-bold text-primary uppercase tracking-widest z-10 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
                                     Education
                                 </span>
                             </div>
@@ -200,8 +199,8 @@ export const ExperienceTimeline = () => {
 
                         {/* Professional Section */}
                         <div className="relative">
-                            <div className="flex md:justify-center mb-8 pl-12 md:pl-0 pt-8 border-t border-white/5 md:border-none">
-                                <span className="bg-zinc-900/90 backdrop-blur-md border border-white/20 px-8 py-3 rounded-full text-xl font-bold text-primary uppercase tracking-widest z-10 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+                            <div className="flex justify-start md:justify-center mb-8 pl-10 md:pl-0 pt-10 border-t border-white/5 md:border-none">
+                                <span className="bg-zinc-900/90 backdrop-blur-md border border-white/20 px-6 py-2 md:px-8 md:py-3 rounded-full text-lg md:text-xl font-bold text-primary uppercase tracking-widest z-10 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
                                     Professional
                                 </span>
                             </div>

@@ -46,13 +46,17 @@ export const ProjectCard = ({ title, description, year, image, icon, accentColor
                         target="_blank"
                         rel="noopener noreferrer"
                         className="bg-white text-background-dark w-12 h-12 rounded-full flex items-center justify-center font-bold hover:scale-110 transition-transform"
+                        title="View Repository"
                     >
                         <span className="material-symbols-outlined">arrow_outward</span>
                     </a>
                 ) : (
-                    <button className="bg-white text-background-dark w-12 h-12 rounded-full flex items-center justify-center font-bold hover:scale-110 transition-transform">
-                        <span className="material-symbols-outlined">arrow_outward</span>
-                    </button>
+                    <div
+                        className="bg-white/20 text-white/50 w-12 h-12 rounded-full flex items-center justify-center font-bold cursor-not-allowed border border-white/10 backdrop-blur-sm"
+                        title="Repository not available"
+                    >
+                        <span className="material-symbols-outlined">lock</span>
+                    </div>
                 )}
             </div>
         </div>

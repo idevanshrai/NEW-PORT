@@ -48,8 +48,8 @@ export const PROFILE = {
         { label: "LinkedIn", url: "https://www.linkedin.com/in/idevanshrai/" },
     ],
     nav: [
-        { label: "Projects", href: "#work", color: "primary" },
-        { label: "About", href: "#about", color: "accent-pink" },
+        { label: "About", href: "#about", color: "primary" },
+        { label: "Projects", href: "#work", color: "accent-pink" },
         { label: "Lab", href: "#lab", color: "accent-violet" },
     ]
 };
@@ -65,7 +65,7 @@ export const PROJECTS: Project[] = [
         repo: "https://github.com/idevanshrai/BrimBrowser-MacOS"
     },
     {
-        title: "mcp playground",
+        title: "MCP playground",
         description: "Leave Management MCP Server for Claude Desktop.",
         year: "2026",
         image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBGQtqgALG6XX3mFc_0XjLaVA1ojcOPQ5Is54CwYC1UwCJYUA0mKbly1ODHsewy5rz4Aw0Ed9iSXJCOtex-e9nJkCIYGJB7Pwji1dnL-AT5xy5GnmtFuIIyEbHcqvkFJzj0Krd0UEnVkJj5S7wKew7OfDmlCGHtfrKVpPHLhwX_UMAGshndJcZmYCJd5fqcAyedjDZPSzeAKNO0rcYsVmUFB-TU44UuQjTTTfFjpCfBS5pDMlGox7PpTxeurnrp60EeKMK8n7yAZlU",

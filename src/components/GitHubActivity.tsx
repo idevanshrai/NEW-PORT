@@ -218,7 +218,7 @@ export const GitHubActivity = () => {
                                     </span>
                                     <div>
                                         <p className="text-white/80">
-                                            {event.type.replace('Event', '')} on <span className="text-primary">{event.repo.name.split('/')[1]}</span>
+                                            {event.type.replace('Event', '')} on <span className="text-primary">{event.repo?.name ? (event.repo.name.includes('/') ? event.repo.name.split('/')[1] : event.repo.name) : 'repository'}</span>
                                         </p>
                                         <p className="text-white/30 text-xs mt-1">
                                             {new Date(event.created_at).toLocaleDateString()}

@@ -4,18 +4,18 @@ export const AboutStats = () => {
     return (
         <section className="px-4 py-8 md:py-20 md:px-20 max-w-[1200px] mx-auto w-full" id="about">
             <div className="glass-panel rounded-[2rem] md:rounded-[3rem] relative overflow-hidden">
-                {/* Background Blobs */}
-                <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-accent-pink/20 rounded-full blur-[60px] pointer-events-none"></div>
-
                 <div className="relative z-10 flex flex-col">
                     {/* Top Section: Bio */}
                     <div className="flex flex-col md:flex-row gap-10 md:gap-16 p-8 md:p-16 pb-0 md:pb-8 items-center">
                         {/* Left: Image */}
                         <div className="w-full md:w-[40%] flex-shrink-0">
                             <div
-                                className="w-full aspect-[4/5] rounded-2xl bg-cover bg-center border border-white/10 shadow-2xl relative group overflow-hidden"
-                                style={{ backgroundImage: `url('${PROFILE.about.avatarUrl}')` }}
+                                className="w-full aspect-[4/5] rounded-[2rem] bg-white/5 border border-white/10 shadow-2xl relative group overflow-hidden"
                             >
+                                <div
+                                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                                    style={{ backgroundImage: `url('${PROFILE.about.avatarUrl}')` }}
+                                />
                                 <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-overlay" />
                             </div>
                         </div>

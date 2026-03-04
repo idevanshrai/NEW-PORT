@@ -49,31 +49,41 @@ export const LabCarousel = () => {
             </div>
 
             {/* Carousel */}
-            <div
-                ref={containerRef}
-                className="flex gap-8 overflow-x-auto px-4 md:px-20 pb-12 snap-x snap-mandatory hide-scrollbar"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            >
-                {LAB_PROJECTS.map((project, index) => (
-                    <div
-                        key={index}
-                        className="min-w-[300px] md:min-w-[400px] snap-center group relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-white/5 border border-white/10"
-                        data-cursor-snap
-                    >
-                        <img
-                            src={project.image}
-                            alt={project.title}
-                            className="absolute inset-0 w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-80 transition-all duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent" />
+            {LAB_PROJECTS && LAB_PROJECTS.length > 0 ? (
+                <div
+                    ref={containerRef}
+                    className="flex gap-8 overflow-x-auto px-4 md:px-20 pb-12 snap-x snap-mandatory hide-scrollbar"
+                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
+                    {LAB_PROJECTS.map((project, index) => (
+                        <div
+                            key={index}
+                            className="min-w-[300px] md:min-w-[400px] snap-center group relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-white/5 border border-white/10"
+                            data-cursor-snap
+                        >
+                            <img
+                                src={project.image}
+                                alt={project.title}
+                                className="absolute inset-0 w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-80 transition-all duration-700"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent" />
 
-                        <div className="absolute bottom-0 left-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            <h3 className="text-2xl font-bold mb-1">{project.title}</h3>
-                            <p className="text-accent-violet font-mono text-sm">{project.subtitle}</p>
+                            <div className="absolute bottom-0 left-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                <h3 className="text-2xl font-bold mb-1">{project.title}</h3>
+                                <p className="text-accent-violet font-mono text-sm">{project.subtitle}</p>
+                            </div>
                         </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="px-4 md:px-20 pb-12">
+                    <div className="glass-panel p-12 rounded-[2rem] border border-white/5 flex flex-col items-center justify-center text-center">
+                        <span className="material-symbols-outlined text-6xl text-white/20 mb-4 animate-pulse-slow">science</span>
+                        <h3 className="text-2xl font-bold text-white/60 mb-2">The Lab is Quiet</h3>
+                        <p className="text-white/40">New experiments are currently brewing. Check back later.</p>
                     </div>
-                ))}
-            </div>
+                </div>
+            )}
         </section>
     );
 };
