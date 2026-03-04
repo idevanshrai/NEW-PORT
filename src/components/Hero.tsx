@@ -45,7 +45,7 @@ export const Hero = () => {
     return (
         <div className="relative min-h-screen flex items-center justify-center p-6 @container overflow-hidden pt-20 md:pt-0">
             {/* Green Blob - Enhanced Visibility on smaller screens */}
-            <div className="absolute top-[70%] -right-[30%] md:top-auto md:bottom-0 md:right-0 w-[450px] h-[450px] md:w-[500px] md:h-[500px] bg-primary/50 md:bg-primary/40 rounded-full blur-[100px] md:blur-[120px] pointer-events-none z-0 opacity-80 md:opacity-50 mix-blend-screen"></div>
+            <div className="absolute top-[80%] -right-[40%] md:top-auto md:bottom-0 md:right-0 w-[450px] h-[450px] md:w-[500px] md:h-[500px] bg-primary/50 md:bg-primary/40 rounded-full blur-[100px] md:blur-[120px] pointer-events-none z-0 opacity-80 md:opacity-50 mix-blend-screen"></div>
 
             {/* Scattered Nav Items */}
             <nav className="absolute inset-0 pointer-events-none z-20 hidden md:block">

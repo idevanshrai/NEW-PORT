@@ -40,7 +40,7 @@ function App() {
       >
         {/* Fluid Background Mesh */}
         <div className="absolute inset-0 h-screen w-full z-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-[-5%] -left-[10%] w-[500px] h-[500px] md:top-[-10%] md:left-[-10%] md:w-[50vw] md:h-[50vw] bg-accent-violet/40 md:bg-accent-violet/20 rounded-full blur-[90px] md:blur-[100px] animate-float mix-blend-screen"></div>
+          <div className="absolute top-[-10%] -left-[20%] w-[500px] h-[500px] md:top-[-10%] md:left-[-10%] md:w-[50vw] md:h-[50vw] bg-accent-violet/40 md:bg-accent-violet/20 rounded-full blur-[90px] md:blur-[100px] animate-float mix-blend-screen"></div>
         </div>
 
         <div className="relative z-10 flex min-h-screen w-full flex-col">
