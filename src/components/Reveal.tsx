@@ -1,44 +1,34 @@
-import { useRef, useEffect } from 'react';
-import { motion, useInView, useAnimation } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import type { ReactNode } from 'react';
 
-interface RevealProps {
-    children: React.ReactNode;
-    width?: "fit-content" | "100%";
-    delay?: number;
-    direction?: "up" | "down" | "left" | "right";
-    className?: string;
-}
-
-export const Reveal = ({ children, width = "fit-content", delay = 0.25, direction = "up", className = "" }: RevealProps) => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-50px" });
-    const mainControls = useAnimation();
-
-    useEffect(() => {
-        if (isInView) {
-            mainControls.start("visible");
-        }
-    }, [isInView, mainControls]);
-
-    const variants = {
-        hidden: {
-            opacity: 0,
-            y: direction === "up" ? 75 : direction === "down" ? -75 : 0,
-            x: direction === "left" ? 75 : direction === "right" ? -75 : 0,
-        },
-        visible: { opacity: 1, y: 0, x: 0 },
-    };
-
-    return (
-        <div ref={ref} style={{ width }} className={`relative ${className}`}>
-            <motion.div
-                variants={variants}
-                initial="hidden"
-                animate={mainControls}
-                transition={{ duration: 0.5, delay: delay }}
-            >
-                {children}
-            </motion.div>
-        </div>
-    );
+export const Reveal = ({
+  children,
+  delay = 0,
+  className,
+}: {
+  children: ReactNode;
+  delay?: number;
+  className?: string;
+}) => {
+  const reduce = useReducedMotion();
+  return (
+    <motion.div
+      className={className}
+      initial={reduce ? false : { opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '0px 0px -12% 0px' }}
+      transition={{ duration: 0.8, delay, ease: [0.2, 0.7, 0.2, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
 };
+
+/** "01 — About" style section header */
+export const SectionLabel = ({ n, children }: { n: string; children: ReactNode }) => (
+  <div className="flex items-center gap-3 label">
+    <span className="text-lime">{n}</span>
+    <span className="h-px w-8 bg-line" />
+    <span>{children}</span>
+  </div>
+);

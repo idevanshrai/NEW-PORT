@@ -1,56 +1,37 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-    content: [
-        "./index.html",
-        "./src/**/*.{js,ts,jsx,tsx}",
-    ],
-    darkMode: "class",
-    theme: {
-        extend: {
-            colors: {
-                primary: "#aaff00",
-                "accent-violet": "#A300FF",
-                "accent-pink": "#FF33CC",
-                "background-light": "#f2f2f3",
-                "background-dark": "#242428",
-            },
-            fontFamily: {
-                display: ["Space Grotesk", "sans-serif"],
-                body: ["Space Grotesk", "sans-serif"],
-                mono: ["JetBrains Mono", "monospace"],
-            },
-            borderRadius: {
-                DEFAULT: "1rem",
-                lg: "2rem",
-                xl: "3rem",
-                full: "9999px",
-            },
-            animation: {
-                float: "float 10s ease-in-out infinite",
-                "float-delayed": "float 15s ease-in-out infinite reverse",
-                "pulse-slow": "pulse 4s cubic-bezier(0.4,0,0.6,1) infinite",
-                "rainbow-shift": "rainbow-shift 3s linear infinite",
-                "shine": "shine 5s linear infinite",
-                "blink": "blink 1s step-end infinite",
-            },
-            keyframes: {
-                float: {
-                    "0%,100%": { transform: "translate(0,0) rotate(0deg)" },
-                    "33%": { transform: "translate(30px,-50px) rotate(10deg)" },
-                    "66%": { transform: "translate(-20px,20px) rotate(-5deg)" },
-                },
-                "rainbow-shift": {
-                    "to": { "background-position": "200% center" }
-                },
-                shine: {
-                    "to": { "background-position": "200% center" }
-                },
-                blink: {
-                    "0%, 100%": { opacity: "1" },
-                    "50%": { opacity: "0" }
-                }
-            },
-        },
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        ink: '#0d0d0b',        // page
+        char: '#161614',       // raised surface
+        line: '#2a2a26',       // hairlines
+        paper: '#ecebe4',      // primary text
+        mute: '#8b8a80',       // secondary text
+        lime: '#c8ff2e',       // the one accent
+      },
+      fontFamily: {
+        display: ['"Archivo Variable"', 'system-ui', 'sans-serif'],
+        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+        sans: ['"Inter Tight Variable"', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono Variable"', 'ui-monospace', 'monospace'],
+      },
+      letterSpacing: {
+        tightest: '-0.055em',
+      },
+      maxWidth: {
+        page: '1440px',
+      },
+      keyframes: {
+        marquee: { to: { transform: 'translateX(-100%)' } },
+        fade: { from: { opacity: '0' }, to: { opacity: '1' } },
+      },
+      animation: {
+        marquee: 'marquee 40s linear infinite',
+        fade: 'fade 1.2s ease-out both',
+      },
     },
-    plugins: [],
-}
+  },
+  plugins: [],
+};

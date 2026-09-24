@@ -1,71 +1,34 @@
-# 💻 Personal Portfolio Website
+# idevanshrai.vercel.app
 
-Welcome to my portfolio! This project is a digital representation of who I am as a Computer Science student and developer — showcasing my work, interests, and what I love building.
+Personal site. Vite + React + TypeScript + Tailwind, with a scroll-driven three.js scene (React Three Fiber).
 
----
+## Run it
 
-## 🚀 Features
+```bash
+npm install
+npm run dev        # http://localhost:5173
+npm run build      # type-check + production build
+```
 
-- **Responsive Design**  
-  Fully optimized for all devices — from desktops to smartphones.
+## Where things live
 
-- **Project Showcase**  
-  A clean, visual portfolio with descriptions and live links to my best work.
+| What | File |
+| --- | --- |
+| All copy (intro, experience, projects, lab) | `src/data.ts` |
+| The 3D scroll scene | `src/components/Scene3D.tsx` |
+| GitHub stats (server-side) | `api/github.js` |
+| Link-preview image | `public/og.jpg` |
 
-- **About Me**  
-  A glimpse into my background, skills, and creative passions — from code to cameras.
+## The 3D scene
 
-- **Contact Form**  
-  A simple way for visitors to reach out and connect.
+27 blocks, one formation per section (`top`, `about`, `experience`, `work`, `lab`, `github`, `contact`).
+Between two section centres the blocks interpolate from one formation to the next. It loads in its own
+chunk after the page is on screen, is skipped when WebGL is unavailable, freezes for
+`prefers-reduced-motion`, and fades almost out on phones between the hero and the footer.
 
-- **Interactive Experience**  
-  Engaging animations and subtle interactivity throughout the site.
+## GitHub stats
 
----
-
-## 🛠️ Getting Started
-
-1. **Clone the Repo**  
-   ```bash
-   git clone https://github.com/idevanshrai/NEW-PORT.git
-   ```
-
-2. **Install Dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Run Locally**
-   ```bash
-   npm run dev
-   ```
-
-4. **Customize Your Content**  
-   Replace text, images, and styles to make it your own.
-
-5. **Deploy**  
-   You can deploy it on any static hosting platform like **GitHub Pages**, **Netlify**, or **Vercel**.
-
----
-
-## 🌱 Roadmap / Future Improvements
-
-- **📝 Blog Section** – Sharing insights, tutorials, and thoughts.
-- **🛠️ Skills Deep Dive** – With tools, technologies, and hands-on examples.
-- **💬 Testimonials** – Feedback from collaborators and clients.
-
----
-
-
-## 📄 License
-
-MIT License — feel free to use and modify.
-
----
-
-## 🙋‍♂️ Author
-
-**Devansh Rai**  
-Software Developer | Open Source Enthusiast | Tech + Design Hybrid  
-📧 [idevanshrai@gmail.com](mailto:idevanshrai@gmail.com)  
-🌐 [idevanshrai.vercel.app](https://idevanshrai.vercel.app)
+`/api/github` is a Vercel serverless function. Put a GitHub token in **Vercel → Settings → Environment
+Variables** as `GITHUB_TOKEN` (no `VITE_` prefix — anything prefixed `VITE_` ends up in the public
+bundle). Without a token it falls back to public repo/star counts. `npm run dev` doesn't run `/api`, so
+the section shows its text fallback locally; use `npx vercel dev` to test it.

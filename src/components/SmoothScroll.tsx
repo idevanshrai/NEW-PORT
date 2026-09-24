@@ -2,49 +2,40 @@ import { useEffect } from 'react';
 import Lenis from 'lenis';
 
 export const SmoothScroll = () => {
-    useEffect(() => {
-        const lenis = new Lenis({
-            duration: 1.5,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            orientation: 'vertical',
-            gestureOrientation: 'vertical',
-            smoothWheel: true,
-            wheelMultiplier: 1,
-            touchMultiplier: 2,
-        });
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-        function raf(time: number) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
+    const lenis = new Lenis({
+      duration: 1.1,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
 
-        requestAnimationFrame(raf);
+    let id = 0;
+    const raf = (time: number) => {
+      lenis.raf(time);
+      id = requestAnimationFrame(raf);
+    };
+    id = requestAnimationFrame(raf);
 
-        // Handle Anchor Links
-        const handleAnchorClick = (e: MouseEvent) => {
-            const target = e.target as HTMLElement;
-            const anchor = target.closest('a');
+    // In-page anchor links (#work, #contact…) scroll smoothly too
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement).closest('a');
+      if (!a || a.origin !== location.origin || !a.hash || a.pathname !== location.pathname) return;
+      const el = document.querySelector(a.hash);
+      if (!el) return;
+      e.preventDefault();
+      lenis.scrollTo(el as HTMLElement, { offset: -8 });
+      history.replaceState(null, '', a.hash);
+    };
+    document.addEventListener('click', onClick);
 
-            if (anchor && anchor.hash && anchor.hash.startsWith('#')) {
-                const element = document.querySelector(anchor.hash);
-                if (element) {
-                    e.preventDefault();
-                    lenis.scrollTo(element as HTMLElement, {
-                        offset: 0,
-                        duration: 2.0, // Slower for anchor jumps
-                        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Same smooth curve
-                    });
-                }
-            }
-        };
+    return () => {
+      cancelAnimationFrame(id);
+      lenis.destroy();
+      document.removeEventListener('click', onClick);
+    };
+  }, []);
 
-        document.addEventListener('click', handleAnchorClick);
-
-        return () => {
-            lenis.destroy();
-            document.removeEventListener('click', handleAnchorClick);
-        };
-    }, []);
-
-    return null;
+  return null;
 };

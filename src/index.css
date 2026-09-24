@@ -1,139 +1,85 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   html {
-    font-size: 75%;
+    background: #0d0d0b;
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-ink text-paper font-sans;
+  }
+  ::selection {
+    @apply bg-lime text-ink;
+  }
+  a,
+  button {
+    @apply outline-none;
+  }
+  a:focus-visible,
+  button:focus-visible {
+    @apply ring-1 ring-lime ring-offset-4 ring-offset-ink;
   }
 }
 
 @layer components {
-  .glass-morphism {
-    @apply bg-white/5 backdrop-blur-[20px] border border-white/10;
+  /* Condensed, heavy display face */
+  .display {
+    font-family: 'Archivo Variable', system-ui, sans-serif;
+    font-stretch: 72%;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 0.86;
   }
-
-  .glass-panel {
-    @apply bg-white/5 backdrop-blur-[10px] border border-white/5;
+  /* Small mono label: "01 — About" */
+  .label {
+    @apply font-mono text-[11px] uppercase tracking-[0.14em] text-mute;
   }
-
-  .text-glow {
-    text-shadow: 0 0 20px currentColor;
+  .rule {
+    @apply border-t border-line;
   }
-
-  .monogram-glow {
-    text-shadow: 0 0 80px rgba(170, 255, 0, 0.3);
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
-
-  .rainbow-oil-text {
-    background: linear-gradient(90deg, #aaff00, #A300FF, #FF33CC, #aaff00);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: rainbow-shift 3s linear infinite;
-  }
-}
-
-@layer utilities {
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .terminal-line {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  .cursor-blink::after {
-    content: '▊';
-    animation: blink 1s step-end infinite;
-    @apply ml-0.5;
+  .link-underline:hover {
+    background-size: 100% 1px;
   }
 }
 
-@keyframes blink {
-
-  0%,
-  50% {
-    opacity: 1;
-  }
-
-  51%,
-  100% {
-    opacity: 0;
-  }
+/* Film grain — breaks the flat "generated" look */
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-.fluid-mesh {
-  background:
-    radial-gradient(circle at 20% 30%, rgba(163, 0, 255, 0.15), transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(170, 255, 0, 0.15), transparent 50%),
-    radial-gradient(circle at 50% 80%, rgba(255, 51, 204, 0.1), transparent 50%);
-}
-
-/* Custom Scrollbar - Tech Aesthetic */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: #0a0a0c;
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(170, 255, 0, 0.2);
-  border: 1px solid rgba(170, 255, 0, 0.4);
-  /* blocky aesthetic */
-  border-radius: 2px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(170, 255, 0, 0.6);
-  box-shadow: inset 0 0 10px rgba(170, 255, 0, 0.5);
-}
-
-/* Firefox Scrollbar */
+/* Lenis */
 html.lenis,
 html.lenis body {
   height: auto;
 }
-
 .lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
 .lenis.lenis-stopped {
   overflow: hidden;
 }
 
-.lenis.lenis-scrolling iframe {
-  pointer-events: none;
-}
-
-/* Hide default cursor to use custom one */
-@media (min-width: 768px) {
-
-  body,
-  a,
-  button,
-  input,
-  textarea,
-  select {
-    cursor: none;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }
