@@ -1,28 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useGitHub } from '../lib/useGitHub';
 import { PROFILE } from '../data';
 import { Reveal, SectionLabel } from './Reveal';
-
-type Data = {
-  contributions: number | null;
-  repos: number;
-  stars: number;
-  days: { date: string; count: number }[] | null;
-};
 
 // Talks to /api/github (a Vercel function). No token ever reaches the browser.
 // If the API is unavailable (e.g. plain `npm run dev`), only the profile link shows —
 // never fake numbers.
 export const GitHubActivity = () => {
-  const [data, setData] = useState<Data | null>(null);
-
-  useEffect(() => {
-    const ctrl = new AbortController();
-    fetch('/api/github', { signal: ctrl.signal })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => d && typeof d.repos === 'number' && setData(d))
-      .catch(() => {});
-    return () => ctrl.abort();
-  }, []);
+  const data = useGitHub();
 
   const max = data?.days ? Math.max(1, ...data.days.map((d) => d.count)) : 1;
   const level = (c: number) => (c === 0 ? 0 : Math.ceil((c / max) * 4));
@@ -32,7 +16,7 @@ export const GitHubActivity = () => {
     <section id="github" className="relative px-5 py-28 md:px-10 md:py-40">
       <div className="mx-auto grid max-w-page md:pr-[22vw] gap-10 md:grid-cols-12">
         <div className="md:col-span-3">
-          <SectionLabel n="05">On GitHub</SectionLabel>
+          <SectionLabel n="07">On GitHub</SectionLabel>
         </div>
 
         <div className="md:col-span-9">

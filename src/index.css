@@ -3,17 +3,38 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    background: #0d0d0b;
+  /* Colour tokens (space-separated RGB so Tailwind can add opacity) */
+  :root {
+    --ink: 13 13 11;
+    --char: 22 22 20;
+    --line: 42 42 38;
+    --paper: 236 235 228;
+    --mute: 139 138 128;
+    --lime: 200 255 46;
     color-scheme: dark;
+  }
+  :root[data-theme='light'] {
+    --ink: 241 239 232;
+    --char: 230 227 218;
+    --line: 212 208 197;
+    --paper: 21 21 19;
+    --mute: 104 102 94;
+    --lime: 86 138 0;
+    color-scheme: light;
+  }
+  html {
+    background: rgb(var(--ink));
+    transition: background-color 0.4s ease;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
   body {
     @apply bg-ink text-paper font-sans;
+    /* nothing may widen the page sideways on phones (clip, unlike hidden, keeps position: sticky working) */
+    overflow-x: clip;
   }
   ::selection {
-    @apply bg-lime text-ink;
+    @apply bg-lime text-onlime;
   }
   a,
   button {
@@ -82,4 +103,42 @@ html.lenis body {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Long-form text (case studies, blog posts) */
+.prose-dr {
+  @apply max-w-2xl text-lg leading-relaxed text-paper/85;
+}
+.prose-dr > * + * {
+  @apply mt-6;
+}
+.prose-dr h2 {
+  @apply mt-14 font-serif text-4xl leading-tight text-paper;
+}
+.prose-dr h3 {
+  @apply mt-10 text-xl font-medium text-paper;
+}
+.prose-dr a {
+  @apply text-lime underline decoration-1 underline-offset-4;
+}
+.prose-dr code {
+  @apply bg-char px-1.5 py-0.5 font-mono text-[0.85em] text-paper;
+}
+.prose-dr pre {
+  @apply overflow-x-auto border border-line bg-char p-5 font-mono text-sm leading-relaxed;
+}
+.prose-dr pre code {
+  @apply bg-transparent p-0;
+}
+.prose-dr blockquote {
+  @apply border-l-2 border-lime pl-5 text-mute;
+}
+.prose-dr ul {
+  @apply list-disc space-y-2 pl-6 marker:text-lime;
+}
+.prose-dr ol {
+  @apply list-decimal space-y-2 pl-6 marker:text-mute;
+}
+.prose-dr img {
+  @apply border border-line;
 }

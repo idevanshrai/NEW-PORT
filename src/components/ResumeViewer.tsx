@@ -1,81 +1,74 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react';
-import { PROFILE } from '../data';
+import { canEmbedPdf, isPdf, RESUME, type Doc } from '../lib/docs';
+import { emit, on, track } from '../lib/bus';
+import { lockScroll } from '../lib/lenis';
 
-const OPEN = 'dr:open-resume';
-const FILE_NAME = 'Devansh-Rai-Resume.pdf';
-
-/**
- * Phones and tablets can't show a PDF inside a page reliably (iOS shows only
- * page 1, Android Chrome shows nothing), so there we just open the PDF in a
- * new tab and let the browser's own viewer handle it.
- */
-const canEmbedPdf = () =>
-  window.matchMedia('(min-width: 768px) and (pointer: fine)').matches &&
-  // Chrome, Edge, Firefox, Safari on desktop all expose this
-  (navigator.pdfViewerEnabled ?? true);
-
-/** Use anywhere instead of a plain <a href="/resume.pdf">. */
-export const ResumeLink = ({ className, children }: { className?: string; children: ReactNode }) => {
+/** Opens a PDF or image in the in-page viewer. */
+export const DocLink = ({ doc, className, children }: { doc: Doc; className?: string; children: ReactNode }) => {
   const onClick = (e: MouseEvent<HTMLAnchorElement>) => {
-    if (e.metaKey || e.ctrlKey || e.shiftKey || !canEmbedPdf()) return; // let the browser open it
+    track('doc_open', { title: doc.title });
+    if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+    if (isPdf(doc.url) && !canEmbedPdf()) return; // let the browser open it
     e.preventDefault();
-    window.dispatchEvent(new Event(OPEN));
+    emit('dr:open-doc', doc);
   };
   return (
-    <a href={PROFILE.resume} target="_blank" rel="noopener" onClick={onClick} className={className}>
+    <a href={doc.url} target="_blank" rel="noopener" onClick={onClick} className={className}>
       {children}
     </a>
   );
 };
 
-/** Mount once (in App). Listens for ResumeLink clicks. */
+export const ResumeLink = ({ className, children }: { className?: string; children: ReactNode }) => (
+  <DocLink doc={RESUME} className={className}>
+    {children}
+  </DocLink>
+);
+
+/** Mount once (in App). Shows whatever DocLink asked for. */
 export const ResumeViewer = () => {
-  const [open, setOpen] = useState(false);
+  const [doc, setDoc] = useState<Doc | null>(null);
   const closeBtn = useRef<HTMLButtonElement>(null);
   const opener = useRef<Element | null>(null);
 
-  useEffect(() => {
-    const onOpen = () => {
-      opener.current = document.activeElement;
-      setOpen(true);
-    };
-    window.addEventListener(OPEN, onOpen);
-    return () => window.removeEventListener(OPEN, onOpen);
-  }, []);
+  useEffect(
+    () =>
+      on('dr:open-doc', (d) => {
+        opener.current = document.activeElement;
+        setDoc(d);
+      }),
+    [],
+  );
 
   useEffect(() => {
-    if (!open) {
+    if (!doc) {
       (opener.current as HTMLElement | null)?.focus?.();
       return;
     }
     closeBtn.current?.focus();
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setDoc(null);
     window.addEventListener('keydown', onKey);
-    // stop the page (and Lenis) scrolling underneath
-    const html = document.documentElement;
-    html.classList.add('lenis-stopped');
-    html.style.overflow = 'hidden';
+    lockScroll(true);
     return () => {
       window.removeEventListener('keydown', onKey);
-      html.classList.remove('lenis-stopped');
-      html.style.overflow = '';
+      lockScroll(false);
     };
-  }, [open]);
+  }, [doc]);
 
   return (
     <AnimatePresence>
-      {open && (
+      {doc && (
         <motion.div
           className="fixed inset-0 z-[90] flex flex-col bg-ink/85 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
-          onClick={() => setOpen(false)}
+          onClick={() => setDoc(null)}
           role="dialog"
           aria-modal="true"
-          aria-label="Résumé preview"
+          aria-label={doc.title}
           data-lenis-prevent
         >
           <motion.div
@@ -87,28 +80,34 @@ export const ResumeViewer = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between gap-4 border-b border-line pb-4 font-mono text-[12px] uppercase tracking-[0.12em]">
-              <span className="text-mute">Résumé — Devansh Rai</span>
-              <div className="flex items-center gap-6">
+              <span className="truncate text-mute">{doc.title}</span>
+              <div className="flex shrink-0 items-center gap-6">
                 <a
-                  href={PROFILE.resume}
-                  download={FILE_NAME}
-                  className="bg-lime px-3 py-2 text-ink transition-opacity hover:opacity-85"
+                  href={doc.url}
+                  download={doc.filename}
+                  className="bg-lime px-3 py-2 text-onlime transition-opacity hover:opacity-85"
                 >
-                  Download PDF ↓
+                  Download ↓
                 </a>
-                <a href={PROFILE.resume} target="_blank" rel="noopener" className="link-underline hidden text-paper sm:inline">
+                <a href={doc.url} target="_blank" rel="noopener" className="link-underline hidden text-paper sm:inline">
                   New tab ↗
                 </a>
-                <button ref={closeBtn} onClick={() => setOpen(false)} className="text-paper link-underline">
+                <button ref={closeBtn} onClick={() => setDoc(null)} className="text-paper link-underline">
                   Close ✕
                 </button>
               </div>
             </div>
-            <iframe
-              title="Résumé"
-              src={`${PROFILE.resume}#view=FitH&toolbar=0&navpanes=0`}
-              className="mt-4 w-full flex-1 bg-white"
-            />
+            {isPdf(doc.url) ? (
+              <iframe
+                title={doc.title}
+                src={`${doc.url}#view=FitH&toolbar=0&navpanes=0`}
+                className="mt-4 w-full flex-1 bg-white"
+              />
+            ) : (
+              <div className="mt-4 flex min-h-0 flex-1 items-center justify-center">
+                <img src={doc.url} alt={doc.title} className="max-h-full max-w-full object-contain shadow-2xl" />
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}

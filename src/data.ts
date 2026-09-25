@@ -85,12 +85,17 @@ export interface Project {
   stack: string[];
   repo: string;
   live?: string;
+  /** case-study page at /work/<slug> (see src/content/caseStudies.ts) */
+  slug?: string;
+  /** screenshot shown when hovering the project — put the file in public/work/ */
+  preview?: string;
 }
 
 // Featured — the three you'd want an interviewer to ask about.
 export const WORK: Project[] = [
   {
     name: 'BrimBrowser',
+    slug: 'brimbrowser',
     year: '2025',
     kind: 'macOS app',
     blurb:
@@ -100,6 +105,7 @@ export const WORK: Project[] = [
   },
   {
     name: 'LeaveManager MCP',
+    slug: 'leavemanager-mcp',
     year: '2026',
     kind: 'MCP server',
     blurb:
@@ -109,6 +115,7 @@ export const WORK: Project[] = [
   },
   {
     name: 'EchoScribe',
+    slug: 'echoscribe',
     year: '2025',
     kind: 'Local AI service',
     blurb:
@@ -187,3 +194,37 @@ export const LAB: Project[] = [
     repo: 'https://github.com/idevanshrai/Maze-Solver',
   },
 ];
+
+/* ── Now ───────────────────────────────────────────────────────────────────
+ * What I'm up to this month. Update `updated` whenever you change it.
+ * Lines starting with TODO only show in `npm run dev`.
+ */
+export const NOW = {
+  updated: 'September 2026',
+  items: [
+    { k: 'Building', v: 'Agentic AI systems as an intern at IBM India Software Labs.' },
+    { k: 'Studying', v: 'Final year of B.Tech CSE (AI/ML) at VIT, plus a group capstone project.' },
+    { k: 'Tinkering', v: 'Small native macOS apps in SwiftUI after hours.' },
+    { k: 'Reading', v: 'TODO: a book or paper you’re into right now.' },
+    { k: 'Learning', v: 'TODO: one thing you’re learning outside work.' },
+  ],
+};
+
+/* ── Certificates ──────────────────────────────────────────────────────────
+ * Put the file (PDF or image) in public/certificates/ and add a line here.
+ * `thumb` is a small preview image (optional).
+ */
+export const CERTIFICATES: { title: string; issuer: string; date: string; file: string; thumb?: string }[] = [
+  {
+    title: 'Summer Internship Program 2026 — Agentic AI',
+    issuer: 'IBM India Software Labs',
+    date: '2026',
+    file: '/certificates/ibm-summer-internship-2026.pdf',
+    thumb: '/certificates/ibm-summer-internship-2026.jpg',
+  },
+];
+
+/* ── Book a call ───────────────────────────────────────────────────────────
+ * Your Cal.com link, e.g. 'https://cal.com/devanshrai/20min'. Empty = hidden.
+ */
+export const CAL_LINK = '';

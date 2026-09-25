@@ -2,14 +2,46 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { PROFILE } from '../data';
 import { ResumeLink } from './ResumeViewer';
+import { lockScroll } from '../lib/lenis';
+import { emit, on } from '../lib/bus';
+import { getTheme, toggleTheme, type Theme } from '../lib/theme';
+import { POSTS } from '../content/writing';
 
 const LINKS = [
-  { href: '#about', label: 'About' },
-  { href: '#experience', label: 'Experience' },
-  { href: '#work', label: 'Work' },
-  { href: '#lab', label: 'Lab' },
-  { href: '#contact', label: 'Contact' },
+  { href: '/#about', label: 'About' },
+  { href: '/#experience', label: 'Experience' },
+  { href: '/#work', label: 'Work' },
+  { href: '/#lab', label: 'Lab' },
+  ...(POSTS.length ? [{ href: '/writing', label: 'Writing' }] : []),
+  { href: '/#contact', label: 'Contact' },
 ];
+
+/** Sun / moon switch. */
+const ThemeButton = ({ className = '' }: { className?: string }) => {
+  const [theme, setT] = useState<Theme>(() => getTheme());
+  useEffect(() => on('dr:theme', setT), []);
+  return (
+    <button
+      onClick={toggleTheme}
+      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      title="Toggle theme"
+      className={`relative grid h-7 w-7 place-items-center overflow-hidden rounded-full border border-line transition-colors hover:border-paper ${className}`}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={theme}
+          initial={{ y: 14, opacity: 0, rotate: -90 }}
+          animate={{ y: 0, opacity: 1, rotate: 0 }}
+          exit={{ y: -14, opacity: 0, rotate: 90 }}
+          transition={{ duration: 0.3 }}
+          className="text-[13px] leading-none"
+        >
+          {theme === 'light' ? '☾' : '☀'}
+        </motion.span>
+      </AnimatePresence>
+    </button>
+  );
+};
 
 const ease = [0.7, 0, 0.2, 1] as const;
 
@@ -22,13 +54,10 @@ const MobileMenu = ({ open, onClose }: { open: boolean; onClose: () => void }) =
     first.current?.focus();
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
-    const html = document.documentElement;
-    html.classList.add('lenis-stopped');
-    html.style.overflow = 'hidden';
+    lockScroll(true);
     return () => {
       window.removeEventListener('keydown', onKey);
-      html.classList.remove('lenis-stopped');
-      html.style.overflow = '';
+      lockScroll(false);
     };
   }, [open, onClose]);
 
@@ -96,7 +125,21 @@ const MobileMenu = ({ open, onClose }: { open: boolean; onClose: () => void }) =
               transition={{ delay: 0.5, duration: 0.5 }}
               className="space-y-6 font-mono text-[12px] uppercase tracking-[0.12em]"
             >
-              <ResumeLink className="block bg-lime px-5 py-4 text-center text-ink">View résumé</ResumeLink>
+              <ResumeLink className="block bg-lime px-5 py-4 text-center text-onlime">View résumé</ResumeLink>
+              <div className="flex items-center justify-between text-mute">
+                <button
+                  onClick={() => {
+                    onClose();
+                    setTimeout(() => emit('dr:terminal', 'open'), 300);
+                  }}
+                  className="text-paper"
+                >
+                  ❯ Open terminal
+                </button>
+                <span className="flex items-center gap-2">
+                  Theme <ThemeButton />
+                </span>
+              </div>
               <div className="flex justify-between text-paper">
                 <a href={PROFILE.github} target="_blank" rel="noopener">GitHub ↗</a>
                 <a href={PROFILE.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>
@@ -159,6 +202,14 @@ export const Nav = () => {
             ))}
           </ul>
           <div className="flex items-center gap-5">
+            <button
+              onClick={() => emit('dr:palette', 'open')}
+              className="hidden items-center gap-1.5 border border-line px-2 py-1 text-mute transition-colors hover:border-paper hover:text-paper lg:flex"
+              aria-label="Open command menu"
+            >
+              <kbd className="font-mono">⌘K</kbd>
+            </button>
+            <ThemeButton className="hidden md:grid" />
             <ResumeLink className="link-underline hidden md:inline">Résumé ↗</ResumeLink>
             <button
               className="flex items-center gap-3 md:hidden"

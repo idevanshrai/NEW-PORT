@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { findSecret, on, toast, track } from '../lib/bus';
 
 /**
  * Scroll-driven scene: 27 blocks that re-arrange themselves as you move
@@ -52,13 +53,22 @@ function grid3(i: number) {
 const GAP = 1.08;
 const AXES = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1)];
 type Cubie = { g: THREE.Vector3; q: THREE.Quaternion };
-type Move = { axis: 0 | 1 | 2; layer: -1 | 0 | 1; dir: 1 | -1; t: number; dur: number };
+type Move = { axis: 0 | 1 | 2; layer: -1 | 0 | 1; dir: 1 | -1; t: number; dur: number; undo?: boolean };
 
 class Rubik {
   cubies: Cubie[];
   move: Move | null = null;
   wait = 0.6;
   last = -1;
+  /** every move made since solved — replaying it backwards solves the cube */
+  history: Move[] = [];
+  queue: Move[] = [];
+  solving = false;
+  private onSolved: ((moves: number) => void) | null = null;
+  setOnSolved(cb: ((moves: number) => void) | null) {
+    this.onSolved = cb;
+  }
+  private solveCount = 0;
   private rnd = rng(42);
   private rq = new THREE.Quaternion();
 
@@ -69,7 +79,60 @@ class Rubik {
     });
   }
 
+  /** A burst of quick random twists. */
+  scramble(n = 8) {
+    if (this.solving) return;
+    for (let i = 0; i < n; i++) this.queue.push({ ...this.random(), dur: 0.14 });
+    this.wait = 0;
+  }
+
+  /** Snap every piece home (used when there are too many moves to replay). */
+  reset() {
+    const n = this.history.length + (this.move ? 1 : 0);
+    this.cubies.forEach((c, i) => {
+      const [x, y, z] = grid3(i);
+      c.g.set(x, y, z);
+      c.q.identity();
+    });
+    this.move = null;
+    this.queue = [];
+    this.history = [];
+    this.wait = 3.5;
+    this.onSolved?.(n);
+  }
+
+  /**
+   * Undo every move since the cube was last solved, quickly.
+   * Returns false when the history is too long to replay nicely — the caller
+   * then hides a reset() behind an explosion instead.
+   */
+  solve(): boolean {
+    if (this.solving) return true;
+    if (this.history.length > 45) return false;
+    // include the twist that's mid-animation right now — it lands in history when it finishes
+    const moves = this.move ? [...this.history, this.move] : [...this.history];
+    if (!moves.length) {
+      this.onSolved?.(0);
+      return true;
+    }
+    const dur = Math.min(0.22, Math.max(0.07, 7 / Math.max(1, moves.length)));
+    this.queue = moves
+      .slice()
+      .reverse()
+      .map((m) => ({ axis: m.axis, layer: m.layer, dir: (-m.dir) as 1 | -1, t: 0, dur, undo: true }));
+    this.solveCount = this.queue.length;
+    this.solving = true;
+    this.wait = 0;
+    return true;
+  }
+
   private next(): Move {
+    const q = this.queue.shift();
+    if (q) return q;
+    return this.random();
+  }
+
+  private random(): Move {
     let axis: 0 | 1 | 2;
     do axis = Math.floor(this.rnd() * 3) as 0 | 1 | 2;
     while (axis === this.last); // never twist the same axis twice in a row
@@ -89,15 +152,23 @@ class Rubik {
     }
     this.move.t += (dt * speed) / this.move.dur;
     if (this.move.t >= 1) {
-      const { axis, layer, dir } = this.move;
+      const { axis, layer, dir, undo } = this.move;
       this.rq.setFromAxisAngle(AXES[axis], (dir * Math.PI) / 2);
       for (const c of this.cubies) {
         if (Math.round(c.g.getComponent(axis)) !== layer) continue;
         c.g.applyQuaternion(this.rq).round();
         c.q.premultiply(this.rq);
       }
+      if (undo) this.history.pop();
+      else this.history.push(this.move);
       this.move = null;
-      this.wait = this.rnd() > 0.7 ? 0.5 : 0.08;
+      this.wait = this.queue.length ? 0 : this.rnd() > 0.7 ? 0.5 : 0.08;
+      if (this.solving && !this.queue.length) {
+        this.solving = false;
+        this.history = [];
+        this.wait = 3.5; // hold the solved cube so people can see it
+        this.onSolved?.(this.solveCount);
+      }
     }
   }
 
@@ -212,6 +283,12 @@ const MOBILE_OPACITY = [1, 0, 0, 0, 0, 0, 0.18];
 
 const smooth = (t: number) => t * t * (3 - 2 * t);
 
+const PAPER = new THREE.Color('#d8d6cc');
+const LIME = new THREE.Color('#c8ff2e');
+const PARTY = ['#c8ff2e', '#ff4fd8', '#7b61ff', '#29d3ff', '#ffb000', '#d8d6cc'].map((c) => new THREE.Color(c));
+
+export type SceneMode = 'home' | 'broken';
+
 // Scratch objects reused every frame (no allocations in the render loop)
 const tmp = {
   m: new THREE.Matrix4(),
@@ -297,7 +374,7 @@ function useSectionProgress() {
   return state;
 }
 
-function Blocks({ still }: { still: boolean }) {
+function Blocks({ still, mode }: { still: boolean; mode: SceneMode }) {
   const mesh = useRef<THREE.InstancedMesh>(null!);
   const group = useRef<THREE.Group>(null!);
   const formations = useMemo(() => buildFormations(), []);
@@ -305,6 +382,58 @@ function Blocks({ still }: { still: boolean }) {
   const { size, camera, viewport } = useThree();
   const pointer = usePointer();
   const [rubik] = useState(() => new Rubik());
+  const fx = useRef({ partyUntil: 0, explodeUntil: 0, lastColor: 0, clicks: [] as number[], fixed: false });
+
+  // Cube commands from the palette, terminal and easter eggs
+  useEffect(() => {
+    rubik.setOnSolved((n) => {
+      if (n > 0) {
+        toast(`Solved — ${n} moves, undone in reverse.`);
+        findSecret('solved');
+      } else toast('Already solved. Scramble it first!');
+    });
+    const now = () => performance.now() / 1000;
+    const off = on('dr:cube', (a) => {
+      track('cube', { action: a });
+      if (a === 'scramble') rubik.scramble(10);
+      else if (a === 'solve' && mode === 'broken') {
+        // 404 page: pull the scattered pieces back into a cube
+        if (!fx.current.fixed) {
+          fx.current.fixed = true;
+          toast('Fixed the cube. Still no page here, though.');
+        } else rubik.solve();
+      } else if (a === 'solve') {
+        if (!rubik.solve()) {
+          // too many moves to replay — blow it apart and put it back together solved
+          fx.current.explodeUntil = now() + 1.1;
+          setTimeout(() => rubik.reset(), 550);
+        }
+      }
+      else if (a === 'party') {
+        fx.current.partyUntil = now() + 6;
+        rubik.scramble(16);
+        toast('✳ Party mode ✳');
+      } else if (a === 'explode') fx.current.explodeUntil = now() + 1.4;
+    });
+    // Click the cube in the hero: each click scrambles, five quick clicks blows it up
+    const onClick = (e: MouseEvent) => {
+      if (!(e.target as HTMLElement).closest('#hero-stage')) return;
+      const t = now();
+      const clicks = (fx.current.clicks = [...fx.current.clicks.filter((c) => t - c < 2), t]);
+      if (clicks.length >= 5) {
+        fx.current.clicks = [];
+        fx.current.explodeUntil = t + 1.4;
+        findSecret('cube');
+      } else rubik.scramble(4);
+      track('cube', { action: 'click' });
+    };
+    document.addEventListener('click', onClick);
+    return () => {
+      off();
+      document.removeEventListener('click', onClick);
+      rubik.setOnSolved(null);
+    };
+  }, [rubik, mode]);
   const scroll = useRef({ y: 0, v: 0, burst: 0 });
   const narrow = size.width < 768;
   const stageRef = useRef<HTMLElement | null>(null);
@@ -333,15 +462,13 @@ function Blocks({ still }: { still: boolean }) {
   );
 
   useEffect(() => {
-    const paper = new THREE.Color('#d8d6cc');
-    const lime = new THREE.Color('#c8ff2e');
-    for (let i = 0; i < N; i++) mesh.current.setColorAt(i, i === ACCENT ? lime : paper);
+    for (let i = 0; i < N; i++) mesh.current.setColorAt(i, i === ACCENT ? LIME : PAPER);
     mesh.current.instanceColor!.needsUpdate = true;
   }, []);
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 1 / 20);
-    const { index, t } = still ? { index: 0, t: 0 } : progress.current;
+    const { index, t } = mode === 'broken' ? { index: fx.current.fixed ? 0 : 1, t: 0 } : still ? { index: 0, t: 0 } : progress.current;
     const A = formations[index];
     const B = formations[Math.min(index + 1, formations.length - 1)];
     const k = smooth(t);
@@ -359,12 +486,31 @@ function Blocks({ still }: { still: boolean }) {
     sc.y = y;
     sc.v += (vel - sc.v) * (1 - Math.exp(-dt * 10));
     // normal reading-speed scrolling keeps the formations intact; only a hard flick blows them apart
-    const targetBurst = still ? 0 : Math.min(0.85, Math.max(0, (Math.abs(sc.v) - 1800) / 4000));
+    const tnow = performance.now() / 1000;
+    const exploding = tnow < fx.current.explodeUntil;
+    const partying = tnow < fx.current.partyUntil;
+    const targetBurst = still
+      ? 0
+      : exploding
+        ? 1.6
+        : Math.min(0.85, Math.max(0, (Math.abs(sc.v) - 1800) / 4000));
     sc.burst += (targetBurst - sc.burst) * (1 - Math.exp(-dt * (targetBurst > sc.burst ? 12 : 3)));
 
     // ── Rubik moves run whenever the cube is (partly) on screen; faster while you scroll
     const cubeWeight = index === 0 ? 1 - k : index === SECTIONS.length - 2 ? k : index === SECTIONS.length - 1 ? 1 : 0;
-    if (!still && cubeWeight > 0.01) rubik.update(dt, 1 + sc.burst * 2.5);
+    if (!still && (cubeWeight > 0.01 || rubik.solving || rubik.queue.length))
+      rubik.update(dt, rubik.solving ? 1 : 1 + sc.burst * 2.5 + (partying ? 1.5 : 0));
+
+    // party: blocks flash through the palette for a few seconds
+    if (partying && tnow - fx.current.lastColor > 0.12) {
+      fx.current.lastColor = tnow;
+      for (let i = 0; i < N; i++) mesh.current.setColorAt(i, PARTY[Math.floor(Math.random() * PARTY.length)]);
+      mesh.current.instanceColor!.needsUpdate = true;
+    } else if (!partying && fx.current.lastColor > 0) {
+      fx.current.lastColor = 0;
+      for (let i = 0; i < N; i++) mesh.current.setColorAt(i, i === ACCENT ? LIME : PAPER);
+      mesh.current.instanceColor!.needsUpdate = true;
+    }
 
     const LAST = formations.length - 1;
     const poseOf = (fi: number, i: number, p: THREE.Vector3, q: THREE.Quaternion) => {
@@ -461,6 +607,7 @@ function Blocks({ still }: { still: boolean }) {
     const room = (n: number) => (n === 0 || n === SECTIONS.length - 1 ? 0.4 : 0.2) * viewport.width;
     const fit = (n: number) => Math.min(GROUP_S[n], room(n) / FORM_W[n]);
     const place = (n: number) => {
+      if (mode === 'broken') return { x: 0, y: narrow ? 2 : 1.9, s: narrow ? 0.45 : 0.62 };
       if (n === 0) {
         // Hero: sit inside the #hero-stage box (it scrolls with the page, so the cube does too)
         if (!stageRef.current) stageRef.current = document.getElementById('hero-stage');
@@ -471,8 +618,8 @@ function Blocks({ still }: { still: boolean }) {
           return {
             x: (cx / size.width) * 2 * halfW - halfW,
             y: halfH - (cy / size.height) * 2 * halfH,
-            // ~5 world units = the cube's on-screen size once tilted, twisting and bobbing
-            s: Math.min(1, (Math.min(r.width, r.height) * 0.72 * pxToWorld) / 5),
+            // ~3.9 world units ≈ the cube's on-screen size once tilted — it fills the gap and pokes out a little
+            s: Math.min(1.1, (Math.min(r.width, r.height) * pxToWorld) / 3.9),
           };
         }
       }
@@ -492,12 +639,12 @@ function Blocks({ still }: { still: boolean }) {
     const sway = still ? 0 : Math.sin(time * 0.18) * 0.3;
     const px = P.active ? P.x : 0;
     const py = P.active ? P.y : 0;
-    const targetY = mix(GROUP_ROT_Y) + sway + (still ? 0 : px * 0.3) + sc.burst * Math.sign(sc.v) * 0.6;
+    const targetY = mix(GROUP_ROT_Y) + (partying ? tnow * 2.5 : 0) + (mode === 'broken' ? tnow * 0.15 : 0) + sway + (still ? 0 : px * 0.3) + sc.burst * Math.sign(sc.v) * 0.6;
     const targetX = 0.35 + (still ? 0 : -py * 0.18);
     g.rotation.y += (targetY - g.rotation.y) * damp;
     g.rotation.x += (targetX - g.rotation.x) * damp;
     const mat = mesh.current.material as THREE.MeshStandardMaterial;
-    const op = narrow ? mix(MOBILE_OPACITY) : 1;
+    const op = mode === 'broken' ? 1 : narrow ? mix(MOBILE_OPACITY) : 1;
     mat.opacity += (op - mat.opacity) * damp;
     mat.depthWrite = mat.opacity > 0.95;
   });
@@ -509,7 +656,7 @@ function Blocks({ still }: { still: boolean }) {
   );
 }
 
-export default function Scene3D() {
+export default function Scene3D({ mode = 'home' }: { mode?: SceneMode }) {
   const still =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -524,7 +671,7 @@ export default function Scene3D() {
         <hemisphereLight args={['#f4f2ea', '#1a1a17', 0.9]} />
         <directionalLight position={[6, 8, 6]} intensity={2.4} />
         <directionalLight position={[-6, -3, 4]} intensity={0.35} color="#b9c2d0" />
-        <Blocks still={still} />
+        <Blocks still={still} mode={mode} />
       </Canvas>
     </div>
   );

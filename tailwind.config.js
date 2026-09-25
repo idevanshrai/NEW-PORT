@@ -4,12 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: '#0d0d0b',        // page
-        char: '#161614',       // raised surface
-        line: '#2a2a26',       // hairlines
-        paper: '#ecebe4',      // primary text
-        mute: '#8b8a80',       // secondary text
-        lime: '#c8ff2e',       // the one accent
+        // Values live in src/index.css as CSS variables so the light theme can swap them.
+        ink: 'rgb(var(--ink) / <alpha-value>)',     // page
+        char: 'rgb(var(--char) / <alpha-value>)',   // raised surface
+        line: 'rgb(var(--line) / <alpha-value>)',   // hairlines
+        paper: 'rgb(var(--paper) / <alpha-value>)', // primary text
+        mute: 'rgb(var(--mute) / <alpha-value>)',   // secondary text
+        lime: 'rgb(var(--lime) / <alpha-value>)',   // the one accent
+        onlime: '#0d0d0b',                          // text on a lime background (both themes)
       },
       fontFamily: {
         display: ['"Archivo Variable"', 'system-ui', 'sans-serif'],

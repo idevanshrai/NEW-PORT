@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
+import { setLenis } from '../lib/lenis';
 
 export const SmoothScroll = () => {
   useEffect(() => {
@@ -10,6 +11,7 @@ export const SmoothScroll = () => {
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
+    setLenis(lenis);
 
     let id = 0;
     const raf = (time: number) => {
@@ -25,7 +27,7 @@ export const SmoothScroll = () => {
       const el = document.querySelector(a.hash);
       if (!el) return;
       e.preventDefault();
-      lenis.scrollTo(el as HTMLElement, { offset: -8 });
+      lenis.scrollTo(el as HTMLElement, { offset: -8, force: true });
       history.replaceState(null, '', a.hash);
     };
     document.addEventListener('click', onClick);
@@ -33,6 +35,7 @@ export const SmoothScroll = () => {
     return () => {
       cancelAnimationFrame(id);
       lenis.destroy();
+      setLenis(null);
       document.removeEventListener('click', onClick);
     };
   }, []);

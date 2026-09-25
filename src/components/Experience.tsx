@@ -44,9 +44,7 @@ const Stop = ({ e, i }: { e: Entry; i: number }) => {
   // 0 → 1 as this entry travels from the bottom of the screen to ~45% from the top
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'start 45%'] });
   const lit = useTransform(scrollYProgress, [0.85, 1], [0, 1]);
-  const yearColor = useTransform(lit, [0, 1], ['rgba(236,235,228,0.12)', 'rgba(200,255,46,1)']);
   const dotScale = useTransform(lit, [0, 1], [0.6, 1]);
-  const dotBg = useTransform(lit, [0, 1], ['#2a2a26', '#c8ff2e']);
   const x = useTransform(scrollYProgress, [0, 1], [reduce ? 0 : 40, 0]);
   const opacity = useTransform(scrollYProgress, [0, 0.7], [reduce ? 1 : 0.15, 1]);
 
@@ -54,20 +52,23 @@ const Stop = ({ e, i }: { e: Entry; i: number }) => {
     <li ref={ref} className="relative grid gap-4 pb-20 pl-10 md:grid-cols-12 md:gap-10 md:pb-28 md:pl-0">
       {/* Big year — sticks while you read the entry */}
       <div className="md:col-span-3">
-        <motion.span
-          style={{ color: yearColor }}
-          className="display block text-5xl md:sticky md:top-28 md:text-[7vw] lg:text-[5.5vw]"
-        >
-          {e.year}
-        </motion.span>
+        <span className="display relative block text-5xl md:sticky md:top-28 md:text-[7vw] lg:text-[5.5vw]">
+          <span className="text-paper/10">{e.year}</span>
+          {/* lime copy fades in on top once the rail reaches this stop */}
+          <motion.span aria-hidden style={{ opacity: lit }} className="absolute inset-0 text-lime">
+            {e.year}
+          </motion.span>
+        </span>
       </div>
 
       {/* The dot sits on the rail */}
       <motion.span
         aria-hidden
-        style={{ scale: dotScale, backgroundColor: dotBg }}
-        className="absolute left-[3px] top-3 h-3 w-3 rounded-full ring-4 ring-ink md:left-[calc(25%-6px)] md:top-6"
-      />
+        style={{ scale: dotScale }}
+        className="absolute left-[3px] top-3 h-3 w-3 rounded-full bg-line ring-4 ring-ink md:left-[calc(25%-6px)] md:top-6"
+      >
+        <motion.span style={{ opacity: lit }} className="absolute inset-0 rounded-full bg-lime" />
+      </motion.span>
 
       <motion.div style={{ x, opacity }} className="md:col-span-9 md:pl-12">
         <p className="label">
@@ -102,7 +103,7 @@ export const Experience = () => {
   const fill = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
 
   return (
-    <section id="experience" className="relative px-5 py-28 md:px-10 md:py-40">
+    <section id="experience" className="relative overflow-x-clip px-5 py-28 md:px-10 md:py-40">
       <div className="mx-auto max-w-page md:pr-[22vw]">
         <div className="grid gap-10 md:grid-cols-12">
           <div className="md:col-span-3">

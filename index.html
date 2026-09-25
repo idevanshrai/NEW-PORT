@@ -7,8 +7,18 @@
     <meta name="description" content="Devansh Rai — software developer from India. Agentic AI at IBM India Software Labs, native macOS apps in Swift, and computer-vision projects. CS (AI/ML) at VIT." />
     <meta name="author" content="Devansh Rai" />
     <meta name="theme-color" content="#0d0d0b" />
+    <!-- Apply the saved light/dark theme before first paint (no flash) -->
+    <script>
+      try {
+        if (localStorage.getItem('dr:theme') === 'light') document.documentElement.dataset.theme = 'light';
+      } catch (e) {}
+    </script>
     <link rel="canonical" href="https://idevanshrai.vercel.app/" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Favicon: a tiny Rubik's cube, same as the one on the page -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     <!-- Link previews (LinkedIn, WhatsApp, X, Slack, iMessage) -->
     <meta property="og:type" content="website" />
