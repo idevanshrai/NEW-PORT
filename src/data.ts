@@ -228,3 +228,17 @@ export const CERTIFICATES: { title: string; issuer: string; date: string; file: 
  * Your Cal.com link, e.g. 'https://cal.com/devanshrai/20min'. Empty = hidden.
  */
 export const CAL_LINK = '';
+
+/* ── Skills (play mode's skill tree) ───────────────────────────────────────
+ * Tier 1–5 is YOUR call — adjust honestly. `note` shows on hover.
+ */
+export const SKILLS: { name: string; tier: 1 | 2 | 3 | 4 | 5; note: string }[] = [
+  { name: 'C++', tier: 4, note: 'My most fluent language — DSA, robotics firmware' },
+  { name: 'Java', tier: 4, note: 'OOP, coursework, small CLI apps' },
+  { name: 'Python', tier: 4, note: 'ML, computer vision, FastAPI, MCP servers' },
+  { name: 'Agentic AI / RAG', tier: 3, note: 'Tool-using agents and retrieval that cites its sources' },
+  { name: 'Swift / SwiftUI', tier: 3, note: 'Native macOS apps — BrimBrowser, Tabby, Contrail' },
+  { name: 'TypeScript / React', tier: 3, note: 'Web apps and this site' },
+  { name: 'OpenCV / PyTorch', tier: 3, note: 'Vision projects — Sudoku solver, plate recognition' },
+  { name: 'Arduino / Robotics', tier: 4, note: 'Maze solvers, line followers, RoboRace' },
+];

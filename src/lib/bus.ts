@@ -47,6 +47,8 @@ export const SECRETS = {
   light: 'Switched to light mode',
   console: 'Said hi in the dev console',
   lost: 'Found the 404 page',
+  played: 'Loaded into play mode',
+  explorer: 'Visited every island in play mode',
 } as const;
 export type SecretId = keyof typeof SECRETS;
 

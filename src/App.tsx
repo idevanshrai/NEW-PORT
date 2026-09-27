@@ -29,6 +29,8 @@ const Scene3D = lazy(() => import('./components/Scene3D'));
 const CaseStudyPage = lazy(() => import('./pages/CaseStudyPage').then((m) => ({ default: m.CaseStudyPage })));
 const WritingIndex = lazy(() => import('./pages/WritingPages').then((m) => ({ default: m.WritingIndex })));
 const PostPage = lazy(() => import('./pages/WritingPages').then((m) => ({ default: m.PostPage })));
+// Play mode: a whole separate game-style experience, loaded only when visited
+const PlayPage = lazy(() => import('./play/PlayPage'));
 
 function canUseWebGL() {
   try {
@@ -83,6 +85,18 @@ export default function App() {
   const { page, scene } = route(path);
 
   useEffect(() => installLinkInterceptor(), []);
+
+  if (path.replace(/\/+$/, '') === '/play')
+    return (
+      <>
+        <Analytics />
+        <ResumeViewer />
+        <EasterEggs />
+        <Suspense fallback={<div className="fixed inset-0 bg-[#15130f]" />}>
+          <PlayPage />
+        </Suspense>
+      </>
+    );
 
   return (
     <>

@@ -126,6 +126,9 @@ const MobileMenu = ({ open, onClose }: { open: boolean; onClose: () => void }) =
               className="space-y-6 font-mono text-[12px] uppercase tracking-[0.12em]"
             >
               <ResumeLink className="block bg-lime px-5 py-4 text-center text-onlime">View résumé</ResumeLink>
+              <a href="/play" onClick={onClose} className="block border border-lime px-5 py-4 text-center text-lime">
+                ▶ Play mode
+              </a>
               <div className="flex items-center justify-between text-mute">
                 <button
                   onClick={() => {
@@ -209,6 +212,9 @@ export const Nav = () => {
             >
               <kbd className="font-mono">⌘K</kbd>
             </button>
+            <a href="/play" className="hidden text-lime link-underline md:inline">
+              ▶ Play
+            </a>
             <ThemeButton className="hidden md:grid" />
             <ResumeLink className="link-underline hidden md:inline">Résumé ↗</ResumeLink>
             <button

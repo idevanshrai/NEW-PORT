@@ -138,12 +138,14 @@ export const Hero = () => {
               Email
             </a>
           </span>
-          <button
-            onClick={() => emit('dr:palette', 'open')}
-            className="hidden transition-colors hover:text-paper md:inline"
-          >
-            ⌘K menu · ` terminal · click the cube
-          </button>
+          <span className="hidden items-center gap-4 md:flex">
+            <a href="/play" className="bg-lime px-2 py-1 text-onlime">
+              ▶ Press P to play
+            </a>
+            <button onClick={() => emit('dr:palette', 'open')} className="transition-colors hover:text-paper">
+              ⌘K · ` · click the cube
+            </button>
+          </span>
           <span>Graduating 2027</span>
         </motion.div>
       </div>

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { emit, findSecret, toast } from '../lib/bus';
+import { navigate } from '../lib/router';
 
 const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 
@@ -18,6 +19,8 @@ export const EasterEggs = () => {
         emit('dr:cube', 'party');
         findSecret('konami');
       }
+      // P → play mode (only on the main site, not while typing)
+      if (key === 'p' && !e.metaKey && !e.ctrlKey && window.location.pathname !== '/play') navigate('/play');
       // "?" → a nudge towards the fun stuff
       if (e.key === '?') toast('Try ⌘K for the command menu, or ` for the terminal.');
     };

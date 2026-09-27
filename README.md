@@ -16,7 +16,8 @@ npm run build      # type-check + production build
 - **` (backtick)**: terminal (`help`, `neofetch`, `projects`, `secrets`, `sudo hire devansh`…)
 - **↑↑↓↓←→←→BA**: party mode · **click the cube 5×**: it explodes · `cube solve` solves it
 - **devansh()** in the browser console · a 404 page at any unknown URL
-- 8 secrets in total, tracked per visitor in localStorage (`secrets` in the terminal)
+- 10 secrets in total, tracked per visitor in localStorage (`secrets` in the terminal)
+- **P** (or `/play`): play mode — a voxel world of floating islands, one per section, with a hotbar (1–8), panels, advancements, a day/night menu and sounds. Code lives in `src/play/`.
 
 ## Adding things
 
@@ -40,6 +41,7 @@ Lines starting with `TODO` show in lime while you run `npm run dev` and are hidd
 | Blog posts | `src/content/writing/*.md` |
 | Terminal commands | `src/components/Terminal.tsx` |
 | ⌘K commands | `src/lib/commands.ts` |
+| Play mode (world, avatar, HUD) | `src/play/` — skill tiers in `SKILLS` in `src/data.ts` |
 | Colours (dark + light) | `src/index.css` (`:root` variables) |
 | The 3D scroll scene | `src/components/Scene3D.tsx` |
 | GitHub stats (server-side) | `api/github.js` |

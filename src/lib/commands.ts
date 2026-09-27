@@ -63,6 +63,7 @@ export function buildCommands(): Command[] {
     { id: 'github', group: 'Links', label: 'GitHub', hint: 'github.com/idevanshrai', run: () => open(PROFILE.github) },
     { id: 'linkedin', group: 'Links', label: 'LinkedIn', run: () => open(PROFILE.linkedin) },
 
+    { id: 'play', group: 'Fun', label: 'Play mode — explore the voxel world', hint: 'P', keywords: 'game minecraft voxel', run: () => navigate('/play') },
     { id: 'terminal', group: 'Fun', label: 'Open the terminal', hint: 'or press `', keywords: 'shell console cli', run: () => emit('dr:terminal', 'open') },
     { id: 'scramble', group: 'Fun', label: 'Scramble the cube', keywords: 'rubik', run: () => emit('dr:cube', 'scramble') },
     { id: 'solve', group: 'Fun', label: 'Solve the cube', keywords: 'rubik', run: () => emit('dr:cube', 'solve') },

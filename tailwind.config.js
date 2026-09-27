@@ -18,6 +18,7 @@ export default {
         serif: ['"Instrument Serif"', 'Georgia', 'serif'],
         sans: ['"Inter Tight Variable"', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono Variable"', 'ui-monospace', 'monospace'],
+        pixel: ['"Pixelify Sans"', 'ui-monospace', 'monospace'],
       },
       letterSpacing: {
         tightest: '-0.055em',

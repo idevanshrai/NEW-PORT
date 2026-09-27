@@ -16,7 +16,7 @@ const SECTIONS = ['about', 'experience', 'work', 'lab', 'now', 'certificates', '
 const COMMANDS = [
   'help', 'whoami', 'neofetch', 'ls', 'cd', 'cat', 'projects', 'open', 'experience', 'now', 'certs',
   'resume', 'email', 'contact', 'github', 'linkedin', 'theme', 'cube', 'secrets', 'history', 'date',
-  'echo', 'clear', 'exit', 'hire', 'sudo', 'coffee', 'vim',
+  'echo', 'clear', 'exit', 'hire', 'sudo', 'coffee', 'vim', 'play',
 ];
 
 const A = ({ children, onClick }: { children: ReactNode; onClick: () => void }) => (
@@ -116,6 +116,7 @@ export const Terminal = () => {
               ['theme light|dark', 'change the lights'],
               ['cube scramble|solve|party', 'mess with the cube'],
               ['secrets', 'easter eggs found'],
+              ['play', 'enter play mode'],
               ['clear / exit', 'tidy up / leave'],
             ].map(([a, b]) => (
               <span key={a} className="contents">
@@ -276,6 +277,10 @@ export const Terminal = () => {
         break;
       case 'rm':
         print('rm: permission denied (and a little rude).');
+        break;
+      case 'play':
+        print('Loading world…');
+        goto('/play');
         break;
       case 'coffee':
         print('☕ Brewing… done. Now we’re both productive.');
