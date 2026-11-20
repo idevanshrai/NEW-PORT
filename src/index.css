@@ -19,7 +19,8 @@
     --line: 212 208 197;
     --paper: 21 21 19;
     --mute: 104 102 94;
-    --lime: 86 138 0;
+    /* greener and less olive than before, still dark enough for small text on the light background */
+    --lime: 61 140 0;
     color-scheme: light;
   }
   html {
@@ -193,4 +194,98 @@ html.lenis body {
 }
 .px-text-shadow {
   text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.55);
+}
+
+/* ── Play mode: info screens ───────────────────────────────────────────── */
+/* Book: parchment pages, a dark leather edge, a soft spine shadow */
+.px-book {
+  color: #3b2a17;
+  background-color: #efe2bf;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(120, 90, 40, 0.06) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(90deg, rgba(120, 90, 40, 0.04) 0 2px, transparent 2px 8px);
+  border: 4px solid #2a1a0c;
+  box-shadow:
+    inset 0 0 0 4px #7a5631,
+    inset 0 0 0 7px #c9b07c,
+    0 18px 60px rgba(0, 0, 0, 0.55);
+  image-rendering: pixelated;
+}
+@media (min-width: 768px) {
+  .px-spread > .px-page:first-child {
+    box-shadow: inset -14px 0 18px -14px rgba(59, 38, 20, 0.5);
+  }
+  .px-spread > .px-page + .px-page {
+    box-shadow: inset 14px 0 18px -14px rgba(59, 38, 20, 0.5);
+  }
+}
+.px-book-btn {
+  background: #d9c59a;
+  border: 3px solid #2a1a0c;
+  box-shadow:
+    inset 2px 2px 0 #f3e6c4,
+    inset -2px -2px 0 #a88d5c;
+  color: #2a1a0c;
+}
+.px-book-btn:hover:not(:disabled),
+.px-book-btn:focus-visible {
+  filter: brightness(1.06);
+  outline: 2px solid #7a3e12;
+  outline-offset: 1px;
+}
+.px-book-btn:disabled {
+  opacity: 0.35;
+}
+/* Wax seal buttons on the letter */
+.px-seal {
+  background: radial-gradient(circle at 35% 30%, #d0463a, #8e1f17 70%);
+  border: 3px solid #4a0f0a;
+  border-radius: 9999px;
+  color: #fff3e6;
+  text-shadow: 1px 1px 0 #4a0f0a;
+}
+.px-seal:hover,
+.px-seal:focus-visible {
+  filter: brightness(1.12);
+  outline: 2px solid #2a1a0c;
+  outline-offset: 2px;
+}
+
+/* Container: a wooden frame around stone-grey slots */
+.px-chest {
+  background-color: #7a5631;
+  background-image: repeating-linear-gradient(0deg, transparent 0 14px, rgba(40, 24, 10, 0.35) 14px 16px);
+  border: 4px solid #1a1108;
+  box-shadow:
+    inset 4px 4px 0 #a37a4a,
+    inset -4px -4px 0 #4a3118,
+    0 18px 60px rgba(0, 0, 0, 0.55);
+  image-rendering: pixelated;
+}
+.px-chest-inner {
+  background: #a3a3aa;
+  box-shadow:
+    inset 3px 3px 0 #5a5a62,
+    inset -3px -3px 0 #d8d8de;
+}
+/* Item glint on featured things */
+.px-glint {
+  position: relative;
+  overflow: hidden;
+}
+.px-glint::after {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 236, 140, 0.55) 50%, transparent 60%);
+  animation: px-glint 2.8s linear infinite;
+  pointer-events: none;
+}
+@keyframes px-glint {
+  from {
+    transform: translateX(-60%);
+  }
+  to {
+    transform: translateX(60%);
+  }
 }

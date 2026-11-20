@@ -2,16 +2,14 @@ import { CAL_LINK, PROFILE } from '../data';
 import { track } from '../lib/bus';
 import { copyEmail } from '../lib/commands';
 import { Magnetic } from './Magnetic';
-import { SectionLabel } from './Reveal';
 import { ResumeLink } from './ResumeViewer';
 
 export const Contact = () => (
   <footer id="contact" className="relative flex min-h-[100svh] flex-col justify-between px-5 pb-8 pt-28 md:px-10 md:pt-40">
     <div className="mx-auto w-full max-w-page">
-      <SectionLabel n="08">Contact</SectionLabel>
-      <h2 className="display mt-10 text-[18vw] text-paper md:text-[13vw]">
+      <h2 className="display text-[18vw] text-paper md:text-[13vw]">
         Say
-        <span className="font-serif font-normal italic tracking-normal text-lime"> hello</span>
+        <span className="font-serif font-normal italic tracking-normal"> hello</span>
       </h2>
       <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
         <a

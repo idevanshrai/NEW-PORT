@@ -1,16 +1,13 @@
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { EDUCATION, EXPERIENCE } from '../data';
-import { SectionLabel } from './Reveal';
 
 type Entry = {
-  kind: 'Work' | 'Education';
   year: string;
   period: string;
   title: string;
   sub: string;
   points: string[];
-  tags?: string[];
 };
 
 const yearOf = (period: string) => (period.match(/\d{4}/g) ?? ['']).slice(-1)[0];
@@ -18,17 +15,14 @@ const yearOf = (period: string) => (period.match(/\d{4}/g) ?? ['']).slice(-1)[0]
 // Newest first: all roles, then education.
 const ENTRIES: Entry[] = [
   ...EXPERIENCE.map((r) => ({
-    kind: 'Work' as const,
     year: yearOf(r.period),
     period: r.period,
     title: r.org,
     sub: r.role,
     // TODO lines show (in lime) while you run `npm run dev`, never on the live site
     points: r.points.filter((p) => import.meta.env.DEV || !p.startsWith('TODO')),
-    tags: r.tags,
   })),
   ...EDUCATION.map((e) => ({
-    kind: 'Education' as const,
     year: e.period.match(/\d{4}/)?.[0] ?? '',
     period: e.period,
     title: e.school,
@@ -38,7 +32,7 @@ const ENTRIES: Entry[] = [
 ];
 
 /** One stop on the timeline. The dot and the big year light up once the lime line reaches them. */
-const Stop = ({ e, i }: { e: Entry; i: number }) => {
+const Stop = ({ e }: { e: Entry }) => {
   const ref = useRef<HTMLLIElement>(null);
   const reduce = useReducedMotion();
   // 0 → 1 as this entry travels from the bottom of the screen to ~45% from the top
@@ -71,9 +65,7 @@ const Stop = ({ e, i }: { e: Entry; i: number }) => {
       </motion.span>
 
       <motion.div style={{ x, opacity }} className="md:col-span-9 md:pl-12">
-        <p className="label">
-          {String(i + 1).padStart(2, '0')} · {e.kind} · {e.period}
-        </p>
+        <p className="text-sm text-mute">{e.period}</p>
         <h3 className="mt-3 text-3xl font-medium text-paper md:text-5xl">{e.title}</h3>
         <p className="mt-2 text-lg text-mute">{e.sub}</p>
         {e.points.length > 0 && (
@@ -85,11 +77,6 @@ const Stop = ({ e, i }: { e: Entry; i: number }) => {
               </li>
             ))}
           </ul>
-        )}
-        {e.tags && (
-          <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.12em] text-mute">
-            {e.tags.join(' / ')}
-          </p>
         )}
       </motion.div>
     </li>
@@ -104,12 +91,9 @@ export const Experience = () => {
 
   return (
     <section id="experience" className="relative overflow-x-clip px-5 py-28 md:px-10 md:py-40">
-      <div className="mx-auto max-w-page md:pr-[22vw]">
+      <div className="mx-auto max-w-page lg:pr-[22vw]">
         <div className="grid gap-10 md:grid-cols-12">
-          <div className="md:col-span-3">
-            <SectionLabel n="02">Experience</SectionLabel>
-          </div>
-          <h2 className="display text-6xl text-paper md:col-span-9 md:text-[8vw]">
+          <h2 className="display text-6xl text-paper md:col-span-12 md:text-[8vw]">
             Where I’ve
             <br />
             <span className="font-serif font-normal italic tracking-normal">been</span>
@@ -124,8 +108,8 @@ export const Experience = () => {
             style={{ scaleY: fill }}
             className="absolute bottom-20 left-[8px] top-4 w-px origin-top bg-lime md:left-[25%]"
           />
-          {ENTRIES.map((e, i) => (
-            <Stop key={e.title} e={e} i={i} />
+          {ENTRIES.map((e) => (
+            <Stop key={e.title} e={e} />
           ))}
         </ol>
       </div>

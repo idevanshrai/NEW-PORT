@@ -1,15 +1,12 @@
 import { CERTIFICATES } from '../data';
-import { Reveal, SectionLabel } from './Reveal';
+import { Reveal } from './Reveal';
 import { DocLink } from './ResumeViewer';
 
 export const Certificates = () => (
   <section id="certificates" className="relative px-5 py-28 md:px-10 md:py-40">
-    <div className="mx-auto max-w-page md:pr-[22vw]">
+    <div className="mx-auto max-w-page lg:pr-[22vw]">
       <div className="grid gap-10 md:grid-cols-12">
-        <div className="md:col-span-3">
-          <SectionLabel n="05">Certificates</SectionLabel>
-        </div>
-        <h2 className="display text-6xl text-paper md:col-span-9 md:text-[8vw]">
+        <h2 className="display text-6xl text-paper md:col-span-12 md:text-[8vw]">
           On
           <span className="font-serif font-normal italic tracking-normal"> paper</span>
         </h2>

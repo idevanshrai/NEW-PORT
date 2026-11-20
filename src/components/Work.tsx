@@ -2,7 +2,7 @@ import { AnimatePresence, motion, useMotionValue, useSpring } from 'framer-motio
 import { useState } from 'react';
 import { WORK } from '../data';
 import { track } from '../lib/bus';
-import { Reveal, SectionLabel } from './Reveal';
+import { Reveal } from './Reveal';
 
 export const Work = () => {
   // Floating screenshot that follows the cursor over a project row (desktop only)
@@ -20,12 +20,9 @@ export const Work = () => {
         my.set(e.clientY);
       }}
     >
-      <div className="mx-auto max-w-page md:pr-[22vw]">
+      <div className="mx-auto max-w-page lg:pr-[22vw]">
         <div className="grid gap-10 md:grid-cols-12">
-          <div className="md:col-span-3">
-            <SectionLabel n="03">Selected work</SectionLabel>
-          </div>
-          <div className="md:col-span-9">
+          <div className="md:col-span-12">
             <h2 className="display text-6xl text-paper md:text-[8vw]">
               Selected
               <span className="font-serif font-normal italic tracking-normal"> work</span>
@@ -42,8 +39,7 @@ export const Work = () => {
                 onPointerEnter={(e) => e.pointerType === 'mouse' && setHover(p.name)}
                 onPointerLeave={() => setHover(null)}
               >
-                <span className="font-mono text-xs text-mute md:col-span-1">0{i + 1}</span>
-                <div className="md:col-span-6">
+                <div className="md:col-span-7">
                   <h3 className="display text-6xl text-paper transition-colors duration-300 group-hover:text-lime md:text-6xl xl:text-8xl">
                     {/* the whole row is clickable through this link's ::after */}
                     <a
@@ -57,6 +53,15 @@ export const Work = () => {
                   <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.12em] text-mute">
                     {p.kind} — {p.year}
                   </p>
+                  {/* Phones get no hover preview, so show the screenshot in the row */}
+                  {p.preview && (
+                    <img
+                      src={p.preview}
+                      alt={`${p.name} screenshot`}
+                      loading="lazy"
+                      className="mt-6 w-full border border-line md:hidden"
+                    />
+                  )}
                 </div>
                 <div className="flex flex-col justify-between gap-6 md:col-span-5">
                   <p className="max-w-md leading-relaxed text-paper/85">{p.blurb}</p>

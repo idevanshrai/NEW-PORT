@@ -1,45 +1,43 @@
 import { LAB } from '../data';
-import { Reveal, SectionLabel } from './Reveal';
+import { Reveal } from './Reveal';
 
+/**
+ * Smaller builds as a grid of cards, so this section doesn't read like
+ * yet another bordered list after Experience and Work.
+ * Borders: the grid draws the top/left edge, each card its own right/bottom,
+ * so a half-empty last row never leaves stray lines.
+ */
 export const Lab = () => (
   <section id="lab" className="relative px-5 py-28 md:px-10 md:py-40">
-    <div className="mx-auto max-w-page md:pr-[22vw]">
+    <div className="mx-auto max-w-page lg:pr-[22vw]">
       <div className="grid gap-10 md:grid-cols-12">
-        <div className="md:col-span-3">
-          <SectionLabel n="04">Lab</SectionLabel>
-        </div>
-        <h2 className="display text-6xl text-paper md:col-span-9 md:text-[8vw]">
+        <h2 className="display text-6xl text-paper md:col-span-12 md:text-[8vw]">
           Smaller
           <span className="font-serif font-normal italic tracking-normal"> builds</span>
         </h2>
       </div>
 
-      <Reveal className="mt-16 md:mt-24">
-        <ul className="border-b border-line">
-          {LAB.map((p) => (
-            <li key={p.name} className="group border-t border-line">
+      <ul className="mt-16 grid border-l border-t border-line sm:grid-cols-2 xl:grid-cols-4 md:mt-24">
+        {LAB.map((p, i) => (
+          <li key={p.name} className="border-b border-r border-line">
+            <Reveal delay={0.04 * (i % 4)} className="h-full">
               <a
                 href={p.live ?? p.repo}
                 target="_blank"
                 rel="noopener"
-                className="grid grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-1 py-5 transition-colors md:grid-cols-12 md:gap-10"
+                className="group flex h-full flex-col gap-3 p-6 transition-colors duration-300 hover:bg-char"
               >
-                <span className="text-lg text-paper transition-colors group-hover:text-lime md:col-span-3 md:text-xl">
-                  {p.name}
-                </span>
-                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-mute md:order-last md:col-span-1 md:text-right">
-                  {p.year}
-                </span>
-                <span className="col-span-2 text-sm text-mute md:col-span-6 md:text-base">{p.blurb}</span>
-                <span className="col-span-2 font-mono text-[11px] uppercase tracking-[0.12em] text-mute/80 md:col-span-2">
-                  {p.kind}
-                  {p.live && <span className="ml-2 text-lime">● live</span>}
-                </span>
+                <h3 className="text-2xl text-paper transition-colors group-hover:text-lime">{p.name}</h3>
+                <p className="text-sm leading-relaxed text-mute">{p.blurb}</p>
+                <p className="mt-auto pt-5 text-sm text-mute/70">
+                  {p.kind}, {p.year}
+                  {p.live && <span className="ml-2 text-lime">● Live</span>}
+                </p>
               </a>
-            </li>
-          ))}
-        </ul>
-      </Reveal>
+            </Reveal>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 );

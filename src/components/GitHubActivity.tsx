@@ -1,6 +1,6 @@
 import { useGitHub } from '../lib/useGitHub';
 import { PROFILE } from '../data';
-import { Reveal, SectionLabel } from './Reveal';
+import { Reveal } from './Reveal';
 
 // Talks to /api/github (a Vercel function). No token ever reaches the browser.
 // If the API is unavailable (e.g. plain `npm run dev`), only the profile link shows —
@@ -14,12 +14,12 @@ export const GitHubActivity = () => {
 
   return (
     <section id="github" className="relative px-5 py-28 md:px-10 md:py-40">
-      <div className="mx-auto grid max-w-page md:pr-[22vw] gap-10 md:grid-cols-12">
-        <div className="md:col-span-3">
-          <SectionLabel n="07">On GitHub</SectionLabel>
-        </div>
-
-        <div className="md:col-span-9">
+      <div className="mx-auto grid max-w-page lg:pr-[22vw] gap-10 md:grid-cols-12">
+        <div className="md:col-span-12">
+          <h2 className="display mb-14 text-6xl text-paper md:text-[8vw]">
+            On
+            <span className="font-serif font-normal italic tracking-normal"> GitHub</span>
+          </h2>
           {data && (
             <Reveal>
               <dl className="grid grid-cols-3 border-t border-line">

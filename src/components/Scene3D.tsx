@@ -280,6 +280,9 @@ const FORM_W =      [3.4,  4.4,  2.4,  2.8,  2.2,  2.2,   3.4];
 const GROUP_ROT_Y = [0.6,  0.2,  0.0,  0.3, -0.3, -0.7,   0.8];
 // Phones: no free gutter, so the blocks fade right down between hero and contact.
 const MOBILE_OPACITY = [1, 0, 0, 0, 0, 0, 0.18];
+// Tablets / small laptops (768–1023px): the text uses the full width there (the
+// gutter starts at lg), so the blocks fade out in the middle sections too.
+const TABLET_OPACITY = [1, 0, 0, 0, 0, 0, 1];
 
 const smooth = (t: number) => t * t * (3 - 2 * t);
 
@@ -436,6 +439,7 @@ function Blocks({ still, mode }: { still: boolean; mode: SceneMode }) {
   }, [rubik, mode]);
   const scroll = useRef({ y: 0, v: 0, burst: 0 });
   const narrow = size.width < 768;
+  const tablet = !narrow && size.width < 1024;
   const stageRef = useRef<HTMLElement | null>(null);
   const started = useRef(false);
 
@@ -644,7 +648,7 @@ function Blocks({ still, mode }: { still: boolean; mode: SceneMode }) {
     g.rotation.y += (targetY - g.rotation.y) * damp;
     g.rotation.x += (targetX - g.rotation.x) * damp;
     const mat = mesh.current.material as THREE.MeshStandardMaterial;
-    const op = mode === 'broken' ? 1 : narrow ? mix(MOBILE_OPACITY) : 1;
+    const op = mode === 'broken' ? 1 : narrow ? mix(MOBILE_OPACITY) : tablet ? mix(TABLET_OPACITY) : 1;
     mat.opacity += (op - mat.opacity) * damp;
     mat.depthWrite = mat.opacity > 0.95;
   });
@@ -660,8 +664,22 @@ export default function Scene3D({ mode = 'home' }: { mode?: SceneMode }) {
   const still =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // With reduced motion the scene is drawn once and doesn't follow the scroll,
+  // so the cube would float over every section. Show it only on the hero (and the 404).
+  const [pastHero, setPastHero] = useState(false);
+  useEffect(() => {
+    if (!still || mode !== 'home') return;
+    const onScroll = () => setPastHero(window.scrollY > window.innerHeight * 0.6);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [still, mode]);
+
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 z-0 motion-safe:animate-fade">
+    <div
+      aria-hidden
+      className={`pointer-events-none fixed inset-0 z-0 motion-safe:animate-fade ${pastHero ? 'invisible' : ''}`}
+    >
       <Canvas
         dpr={[1, 1.75]}
         camera={{ position: [0, 0, 14], fov: 35 }}

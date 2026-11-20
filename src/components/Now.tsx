@@ -1,6 +1,6 @@
 import { NOW } from '../data';
 import { ago, useGitHub } from '../lib/useGitHub';
-import { Reveal, SectionLabel } from './Reveal';
+import { Reveal } from './Reveal';
 
 /** What I'm up to this month — plus a live "last pushed" line from GitHub. */
 export const Now = () => {
@@ -9,16 +9,13 @@ export const Now = () => {
 
   return (
     <section id="now" className="relative px-5 py-28 md:px-10 md:py-40">
-      <div className="mx-auto grid max-w-page gap-10 md:grid-cols-12 md:pr-[22vw]">
-        <div className="md:col-span-3">
-          <SectionLabel n="06">Now</SectionLabel>
-          <p className="label mt-4">Updated {NOW.updated}</p>
-        </div>
-        <div className="md:col-span-9">
+      <div className="mx-auto grid max-w-page gap-10 md:grid-cols-12 lg:pr-[22vw]">
+        <div className="md:col-span-12">
           <h2 className="display text-6xl text-paper md:text-[8vw]">
             Right
             <span className="font-serif font-normal italic tracking-normal"> now</span>
           </h2>
+          <p className="mt-4 text-sm text-mute">Updated {NOW.updated}</p>
           <dl className="mt-14 border-b border-line">
             {items.map((i, n) => (
               <Reveal key={i.k} delay={n * 0.05}>

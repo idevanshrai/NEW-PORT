@@ -3,7 +3,6 @@ import { Analytics } from '@vercel/analytics/react';
 import { Splash } from './components/Splash';
 import { Nav } from './components/Nav';
 import { Hero } from './components/Hero';
-import { Marquee } from './components/Marquee';
 import { About } from './components/About';
 import { Experience } from './components/Experience';
 import { Work } from './components/Work';
@@ -55,7 +54,6 @@ function useIdleMount() {
 const Home = () => (
   <>
     <Hero />
-    <Marquee />
     <About />
     <Experience />
     <Work />

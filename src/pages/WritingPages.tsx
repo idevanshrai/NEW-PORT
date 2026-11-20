@@ -37,7 +37,22 @@ export const PostPage = ({ slug }: { slug: string }) => {
   useEffect(() => {
     if (!p) return;
     let live = true;
-    import('marked').then(({ marked }) => live && setHtml(marked.parse(p.body, { async: false }) as string));
+    import('marked').then(({ Marked }) => {
+      // Safe by construction: raw HTML in a post is shown as text, and links/images
+      // only keep http(s), mailto, relative and #anchor URLs (no javascript: etc.).
+      const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      // allowlist (not a scheme blocklist): browsers ignore tabs/newlines and decode entities in
+      // URLs, so "java\tscript:" or "&#106;avascript:" must not slip through as "relative"
+      const safeUrl = (u: string) => /^(https?:\/\/|mailto:|#|\/|\.{1,2}\/)\S*$/i.test(u) || /^[\w\-./]+$/.test(u);
+      const md = new Marked({
+        async: false,
+        renderer: { html: ({ text }) => esc(text) },
+        walkTokens: (t) => {
+          if ((t.type === 'link' || t.type === 'image') && !safeUrl(t.href)) t.href = '#';
+        },
+      });
+      if (live) setHtml(md.parse(p.body) as string);
+    });
     return () => {
       live = false;
     };
@@ -55,7 +70,7 @@ export const PostPage = ({ slug }: { slug: string }) => {
           <h1 className="mt-5 font-serif text-5xl leading-[1.05] text-paper md:text-7xl">{p.title}</h1>
           {p.summary && <p className="mt-6 text-xl text-mute">{p.summary}</p>}
         </header>
-        {/* posts are your own Markdown files, rendered at build time */}
+        {/* posts are your own Markdown files, parsed in the browser with raw HTML escaped and unsafe links dropped */}
         <div className="prose-dr mt-14" dangerouslySetInnerHTML={{ __html: html }} />
       </article>
     </PageShell>

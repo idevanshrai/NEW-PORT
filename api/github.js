@@ -71,15 +71,32 @@ async function withoutToken() {
   };
 }
 
-export default async function handler(_req, res) {
+// A warm function instance reuses its last answer for 10 minutes, so even
+// requests that miss the edge cache don't each spend GitHub quota.
+let memo = { at: 0, data: null };
+const MEMO_MS = 10 * 60 * 1000;
+
+export default async function handler(req, res) {
+  // Only plain GET/HEAD /api/github: the edge caches exactly one URL, so junk
+  // methods or query strings can't be used to skip the cache and burn the token's quota.
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    res.setHeader('Allow', 'GET, HEAD');
+    return res.status(405).end();
+  }
+  if ((req.url ?? '').includes('?')) return res.status(400).end();
+
   try {
-    const token = process.env.GITHUB_TOKEN;
-    const data = token ? await withToken(token).catch(() => withoutToken()) : await withoutToken();
+    if (!memo.data || Date.now() - memo.at > MEMO_MS) {
+      const token = process.env.GITHUB_TOKEN;
+      const data = token ? await withToken(token).catch(() => withoutToken()) : await withoutToken();
+      memo = { at: Date.now(), data };
+    }
     // Cache on Vercel's edge for 1h, serve stale while refreshing.
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
-    res.status(200).json(data);
+    res.status(200).json(memo.data);
   } catch (err) {
+    console.error('api/github:', err); // details stay in the server logs
     res.setHeader('Cache-Control', 's-maxage=300');
-    res.status(502).json({ error: String(err?.message || err) });
+    res.status(502).json({ error: 'upstream_unavailable' });
   }
 }

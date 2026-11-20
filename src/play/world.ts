@@ -6,7 +6,8 @@ import type { BlockType } from './textures';
  * here is random at runtime — the same world appears on every visit.
  */
 
-export type Block = { t: BlockType; x: number; y: number; z: number; s?: number };
+/** s: scale (default 1). d: a decoration you can break (trees, crystals, crates…), never terrain or bridges. */
+export type Block = { t: BlockType; x: number; y: number; z: number; s?: number; d?: boolean };
 
 export type BiomeId = 'profile' | 'skills' | 'projects' | 'journey' | 'achievements' | 'certs' | 'now' | 'contact';
 
@@ -27,13 +28,13 @@ export interface Biome {
 
 export const BIOMES: Biome[] = [
   { id: 'profile', slot: 1, title: 'Player Profile', place: 'Meadow', center: [0, 0, 0], radius: 11, surface: 'grass', under: 'dirt', sky: '#8ec5ff', fog: '#b9dcff', ambient: 1, avatar: [2, 2] },
-  { id: 'skills', slot: 2, title: 'Skill Tree', place: 'Server Room', center: [46, 3, -10], radius: 9, surface: 'planks', under: 'stone', sky: '#1b2233', fog: '#1b2233', ambient: 0.45, avatar: [1, 2] },
-  { id: 'projects', slot: 3, title: 'Chest — Projects', place: 'Crystal Mine', center: [92, -2, 0], radius: 10, surface: 'stone', under: 'stone', sky: '#2a2230', fog: '#2a2230', ambient: 0.55, avatar: [2, 2] },
-  { id: 'journey', slot: 4, title: 'Crafting — The Journey', place: 'Frost Peak', center: [138, 7, -8], radius: 10, surface: 'snow', under: 'stone', sky: '#a9c7ea', fog: '#d6e4f5', ambient: 0.95, avatar: [1, 2] },
-  { id: 'achievements', slot: 5, title: 'Advancements', place: 'Glow Caverns', center: [184, -3, 2], radius: 10, surface: 'deep', under: 'deep', sky: '#07101c', fog: '#07101c', ambient: 0.35, avatar: [2, 2] },
-  { id: 'certs', slot: 6, title: 'Certificates', place: 'Dune Archive', center: [230, 1, -6], radius: 10, surface: 'sand', under: 'sand', sky: '#f0c987', fog: '#f5dcae', ambient: 1, avatar: [1, 2] },
-  { id: 'now', slot: 7, title: 'Right Now', place: 'Blossom Hill', center: [276, 4, 0], radius: 10, surface: 'grass', under: 'dirt', sky: '#f6c7d8', fog: '#fbe0ea', ambient: 1, avatar: [2, 2] },
-  { id: 'contact', slot: 8, title: 'Send a Message', place: 'Sunset Shore', center: [322, 0, -8], radius: 11, surface: 'sand', under: 'sand', sky: '#ff9e6d', fog: '#ffc19c', ambient: 0.9, avatar: [1, 2] },
+  { id: 'skills', slot: 2, title: 'Skill Tree', place: 'Server Room', center: [30, 2, 0], radius: 9, surface: 'planks', under: 'stone', sky: '#1b2233', fog: '#1b2233', ambient: 0.45, avatar: [1, 2] },
+  { id: 'projects', slot: 3, title: 'Chest — Projects', place: 'Crystal Mine', center: [59, -1, 0], radius: 10, surface: 'stone', under: 'stone', sky: '#2a2230', fog: '#2a2230', ambient: 0.55, avatar: [2, 2] },
+  { id: 'journey', slot: 4, title: 'Crafting — The Journey', place: 'Frost Peak', center: [89, 4, 0], radius: 10, surface: 'snow', under: 'stone', sky: '#a9c7ea', fog: '#d6e4f5', ambient: 0.95, avatar: [1, 2] },
+  { id: 'achievements', slot: 5, title: 'Advancements', place: 'Glow Caverns', center: [119, 0, 0], radius: 10, surface: 'deep', under: 'deep', sky: '#07101c', fog: '#07101c', ambient: 0.35, avatar: [2, 2] },
+  { id: 'certs', slot: 6, title: 'Certificates', place: 'Dune Archive', center: [149, 2, 0], radius: 10, surface: 'sand', under: 'sand', sky: '#f0c987', fog: '#f5dcae', ambient: 1, avatar: [1, 2] },
+  { id: 'now', slot: 7, title: 'Right Now', place: 'Blossom Hill', center: [179, 3, 0], radius: 10, surface: 'grass', under: 'dirt', sky: '#f6c7d8', fog: '#fbe0ea', ambient: 1, avatar: [2, 2] },
+  { id: 'contact', slot: 8, title: 'Send a Message', place: 'Sunset Shore', center: [210, 0, 0], radius: 11, surface: 'sand', under: 'sand', sky: '#ff9e6d', fog: '#ffc19c', ambient: 0.9, avatar: [1, 2] },
 ];
 
 function rng(seed: number) {
@@ -55,13 +56,100 @@ export interface Island {
   avatarPos: [number, number, number];
   lights: { pos: [number, number, number]; color: string }[];
   fire?: [number, number, number];
+  /** the glowing block you walk up to; opens this island's panel */
+  landmark: [number, number, number];
+  /** where you land when fast-travelling here (feet position) */
+  spawn: [number, number, number];
+  /** waterfalls spilling off the edge: top block position and which way it falls (±z) */
+  falls: { x: number; y: number; z: number; dz: number }[];
 }
 
-export function buildWorld(): Island[] {
-  return BIOMES.map((b, i) => buildIsland(b, i + 3));
+export interface World {
+  islands: Island[];
+  /** bridge blocks (not part of any island) */
+  extra: Block[];
+  /** height of the walkable surface (top face) at a world x/z, or null over the void */
+  walkTop: (x: number, z: number) => number | null;
+  /** bridge i joins island i to i+1: where it leaves (a) and arrives (b), as x/z */
+  bridges: { a: [number, number]; b: [number, number] }[];
+  /** the full-size block at a grid cell, if any */
+  blockAt: (x: number, y: number, z: number) => Block | undefined;
+  /** take a block out of the world (it stops blocking you) */
+  removeBlock: (b: Block) => void;
 }
 
-function buildIsland(b: Biome, seed: number): Island {
+const key = (x: number, z: number) => `${Math.round(x)},${Math.round(z)}`;
+
+export function buildWorld(): World {
+  // ground: world x,z → y of the block you stand on
+  const ground = new Map<string, number>();
+  const islands = BIOMES.map((b, i) => buildIsland(b, i + 3, ground));
+  const extra: Block[] = [];
+  const bridges: World['bridges'] = [];
+  for (let i = 0; i < islands.length - 1; i++) bridges.push(bridge(islands[i].biome, islands[i + 1].biome, ground, extra));
+
+  // Solid blocks stacked on the ground make walls (tree trunks, racks, columns).
+  // Small decorations (tufts, lanterns, flowers) don't block you.
+  const cell = (x: number, y: number, z: number) => `${Math.round(x)},${Math.round(y)},${Math.round(z)}`;
+  const solid = new Map<string, Block>();
+  for (const b of [...islands.flatMap((isl) => isl.blocks), ...extra]) if ((b.s ?? 1) >= 0.6) solid.set(cell(b.x, b.y, b.z), b);
+
+  const cache = new Map<string, number | null>();
+  const walkTop = (x: number, z: number) => {
+    const k = key(x, z);
+    if (cache.has(k)) return cache.get(k)!;
+    let y = ground.get(k);
+    if (y !== undefined) while (solid.has(`${k.split(',')[0]},${y + 1},${k.split(',')[1]}`)) y++;
+    const v = y === undefined ? null : y + 0.5;
+    cache.set(k, v);
+    return v;
+  };
+
+  islands.forEach((isl) => {
+    const [x, , z] = isl.spawn;
+    isl.spawn[1] = walkTop(x, z) ?? isl.spawn[1];
+  });
+  const blockAt = (x: number, y: number, z: number) => solid.get(cell(x, y, z));
+  const removeBlock = (b: Block) => {
+    const k = cell(b.x, b.y, b.z);
+    if (solid.get(k) === b) solid.delete(k);
+    cache.clear();
+  };
+  return { islands, extra, walkTop, bridges, blockAt, removeBlock };
+}
+
+/**
+ * A plank bridge from island a to island b, along each island's centre line.
+ * It slopes one block at a time so you can always walk it, with little posts on the sides.
+ */
+function bridge(a: Biome, b: Biome, ground: Map<string, number>, out: Block[]): World['bridges'][number] {
+  const [ax, , az] = a.center;
+  const [bx, , bz] = b.center;
+  // last solid column leaving a, first one arriving at b
+  let x0 = ax;
+  while (ground.has(key(x0 + 1, az))) x0++;
+  let x1 = bx;
+  while (ground.has(key(x1 - 1, bz))) x1--;
+  const y0 = ground.get(key(x0, az))!;
+  const y1 = ground.get(key(x1, bz))!;
+  for (let x = x0 + 1; x < x1; x++) {
+    const t = (x - x0) / (x1 - x0);
+    const z = Math.round(az + (bz - az) * t);
+    const y = Math.round(y0 + (y1 - y0) * t);
+    for (let dz = -1; dz <= 1; dz++) {
+      if (ground.has(key(x, z + dz))) continue;
+      ground.set(key(x, z + dz), y);
+      out.push({ t: 'planks', x, y, z: z + dz });
+    }
+    if ((x - x0) % 3 === 0) {
+      out.push({ t: 'log', x, y: y + 0.7, z: z - 1.4, s: 0.3 });
+      out.push({ t: 'log', x, y: y + 0.7, z: z + 1.4, s: 0.3 });
+    }
+  }
+  return { a: [x0, az], b: [x1, bz] };
+}
+
+function buildIsland(b: Biome, seed: number, ground: Map<string, number>): Island {
   const r = rng(seed * 97);
   const [cx, cy, cz] = b.center;
   const R = b.radius;
@@ -90,6 +178,10 @@ function buildIsland(b: Biome, seed: number): Island {
       if (d < edge - 2 && r() < 0.05) blocks.push({ t: 'stone', x: cx + x, y: cy + h - depth - 1, z: cz + z });
     }
 
+  heights.forEach((h, k) => {
+    const [x, z] = k.split(',').map(Number);
+    ground.set(key(cx + x, cz + z), cy + h);
+  });
   const top = (x: number, z: number) => cy + (heights.get(`${Math.round(x)},${Math.round(z)}`) ?? 0);
   const [ax, az] = b.avatar;
   const avatarPos: [number, number, number] = [cx + ax, top(ax, az) + 0.5, cz + az];
@@ -98,8 +190,10 @@ function buildIsland(b: Biome, seed: number): Island {
 
   // keep the avatar's spot and the camera's line of sight (in front of / left of the avatar) free
   const inView = (x: number, z: number) => z > az - 2.5 && x > ax - 11 && x < ax + 3.5;
-  const clear = (x: number, z: number) => Math.hypot(x - ax, z - az) > 2.6 && !inView(x, z) && heights.has(`${x},${z}`);
-  const put = (t: BlockType, x: number, y: number, z: number, s?: number) => blocks.push({ t, x: cx + x, y, z: cz + z, s });
+  const corridor = (x: number, z: number) => Math.abs(z) < 2.5 && Math.abs(x) > 2;
+  const clear = (x: number, z: number) =>
+    Math.hypot(x - ax, z - az) > 2.6 && !inView(x, z) && !corridor(x, z) && heights.has(`${x},${z}`);
+  const put = (t: BlockType, x: number, y: number, z: number, s?: number) => blocks.push({ t, x: cx + x, y, z: cz + z, s, d: true });
   const spot = (tries = 40): [number, number] | null => {
     for (let n = 0; n < tries; n++) {
       const x = Math.round((r() * 2 - 1) * (R - 3));
@@ -222,8 +316,8 @@ function buildIsland(b: Biome, seed: number): Island {
     case 'contact': {
       // a little dock out to the water and a mailbox by the avatar
       for (let z = 3; z <= 12; z++) {
-        put('planks', -3, cy, z);
-        put('planks', -2, cy, z);
+        blocks.push({ t: 'planks', x: cx - 3, y: cy, z: cz + z }, { t: 'planks', x: cx - 2, y: cy, z: cz + z });
+        for (const x of [-3, -2]) if (!ground.has(key(cx + x, cz + z))) ground.set(key(cx + x, cz + z), cy);
       }
       put('log', -4, cy - 1, 12);
       put('log', -1, cy - 1, 12);
@@ -236,5 +330,24 @@ function buildIsland(b: Biome, seed: number): Island {
     }
   }
 
-  return { biome: b, blocks, top, avatarPos, lights, fire };
+  // waterfalls: an edge column on the front and back sides, away from the bridges, landmark and dock
+  const falls: Island['falls'] = [];
+  for (const side of [1, -1]) {
+    const edge: [number, number][] = [];
+    heights.forEach((_, k) => {
+      const [x, z] = k.split(',').map(Number);
+      if (Math.sign(z) !== side || Math.abs(z) < 4 || heights.has(`${x},${z + side}`)) return;
+      if (Math.hypot(x - ax, z - az) < 4 || (b.id === 'contact' && x >= -5 && x <= 0)) return;
+      edge.push([x, z]);
+    });
+    if (!edge.length) continue;
+    edge.sort((p, q) => p[0] - q[0] || p[1] - q[1]); // stable order → same world every visit
+    const [x, z] = edge[Math.floor(r() * edge.length)];
+    falls.push({ x: cx + x, y: top(x, z), z: cz + z, dz: side });
+  }
+
+  const landmark: [number, number, number] = [cx + ax, top(ax, az) + 0.5, cz + az];
+  // on the island's centre line (where the bridges are), within reach of the landmark
+  const spawn: [number, number, number] = [cx + ax - 1.5, 0, cz];
+  return { biome: b, blocks, top, avatarPos, lights, fire, landmark, spawn, falls };
 }

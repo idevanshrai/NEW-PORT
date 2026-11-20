@@ -23,12 +23,3 @@ export const Reveal = ({
     </motion.div>
   );
 };
-
-/** "01 — About" style section header */
-export const SectionLabel = ({ n, children }: { n: string; children: ReactNode }) => (
-  <div className="flex items-center gap-3 label">
-    <span className="text-lime">{n}</span>
-    <span className="h-px w-8 bg-line" />
-    <span>{children}</span>
-  </div>
-);

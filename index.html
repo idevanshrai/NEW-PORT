@@ -7,12 +7,8 @@
     <meta name="description" content="Devansh Rai — software developer from India. Agentic AI at IBM India Software Labs, native macOS apps in Swift, and computer-vision projects. CS (AI/ML) at VIT." />
     <meta name="author" content="Devansh Rai" />
     <meta name="theme-color" content="#0d0d0b" />
-    <!-- Apply the saved light/dark theme before first paint (no flash) -->
-    <script>
-      try {
-        if (localStorage.getItem('dr:theme') === 'light') document.documentElement.dataset.theme = 'light';
-      } catch (e) {}
-    </script>
+    <!-- Apply the saved light/dark theme before first paint (no flash). Not a module, so it runs immediately. -->
+    <script src="/theme-init.js"></script>
     <link rel="canonical" href="https://idevanshrai.vercel.app/" />
     <!-- Favicon: a tiny Rubik's cube, same as the one on the page -->
     <link rel="icon" href="/favicon.ico" sizes="32x32" />

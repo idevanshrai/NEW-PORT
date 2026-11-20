@@ -1,17 +1,13 @@
 import { fmtDate, POSTS } from '../content/writing';
-import { SectionLabel } from './Reveal';
 
 /** Latest posts on the home page. Renders nothing until something is published. */
 export const WritingPreview = () => {
   if (!POSTS.length) return null;
   return (
     <section id="writing" className="relative px-5 py-28 md:px-10 md:py-40">
-      <div className="mx-auto max-w-page md:pr-[22vw]">
+      <div className="mx-auto max-w-page lg:pr-[22vw]">
         <div className="grid gap-10 md:grid-cols-12">
-          <div className="md:col-span-3">
-            <SectionLabel n="✎">Writing</SectionLabel>
-          </div>
-          <div className="flex items-end justify-between gap-6 md:col-span-9">
+          <div className="flex items-end justify-between gap-6 md:col-span-12">
             <h2 className="display text-6xl text-paper md:text-[8vw]">
               Notes
             </h2>
